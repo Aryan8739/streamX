@@ -118,3 +118,6 @@ dist
 .pnp.*
 
 # End of https://mrkandreev.name/snippets/gitignore-generator/#Node
+#
+# #MONGODB_URL=mongodb+srv://Aryan:Aryan1234@cluster0.k9h7gik.mongodb.net
+
