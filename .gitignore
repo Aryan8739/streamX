@@ -121,3 +121,4 @@ dist
 #
 # #MONGODB_URL=mongodb+srv://Aryan:Aryan1234@cluster0.k9h7gik.mongodb.net
 
+.env 
