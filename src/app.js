@@ -20,7 +20,7 @@ app.use(express.static('public'));
 app.use(cookieParser());
 
 //Routes
-import {userRouter  } from "../src/routes/users.routes.js";
+import userRouter  from "../src/routes/users.routes.js";
 
 
 //Routes Declaration
