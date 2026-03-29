@@ -49,7 +49,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   // ✅ Create user (FIXED secure_url)
   const user = await User.create({
-    fullName,
+    fullname: fullName,
     avatar: avatar.secure_url,
     coverImage: coverImage?.secure_url || "",
     email,
