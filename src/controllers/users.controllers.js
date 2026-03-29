@@ -3,18 +3,25 @@ import { ApiError } from "../utils/ApiError.js";
 import { User } from "../models/user.models.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import ApiResponse from "../utils/ApiResponse.js";
+import fs from "fs";
+
 
 const registerUser = asyncHandler(async (req, res) => {
 
   const { fullName, email, username, password } = req.body || {}; 
   console.log("email:", email);
 
-  // ✅ Validation
+  // ✅ Validation (Move file paths up for cleanup)
+  const avatarLocalPath = req.files?.avatar?.[0]?.path;
+  const coverImageLocalPath = req.files?.coverImage?.[0]?.path;
+
   if (
     [fullName, email, username, password].some(
       (field) => !field || field.trim() === ""
     )
   ) {
+    if (avatarLocalPath) fs.unlinkSync(avatarLocalPath);
+    if (coverImageLocalPath) fs.unlinkSync(coverImageLocalPath);
     throw new ApiError(400, "All fields are required");
   }
 
@@ -24,12 +31,14 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   if (existedUser) {
+    if (avatarLocalPath) fs.unlinkSync(avatarLocalPath);
+    if (coverImageLocalPath) fs.unlinkSync(coverImageLocalPath);
     throw new ApiError(409, "User with email or username already exists");
   }
 
-  // ✅ Safe file access (FIXED)
-  const avatarLocalPath = req.files?.avatar?.[0]?.path;
-  const coverImageLocalPath = req.files?.coverImage?.[0]?.path;
+
+  // ✅ Safe file access
+
 
   if (!avatarLocalPath) {
     throw new ApiError(400, "Avatar file is required");
