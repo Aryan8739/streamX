@@ -9,4 +9,4 @@ class ApiReponse {
     }
 }
 
-export { ApiReponse }
+export default   ApiReponse ;
