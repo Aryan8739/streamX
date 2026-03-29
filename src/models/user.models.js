@@ -22,11 +22,11 @@ const  userSchema   = new  Schema(
             type: String ,
             required : true,
             trim : true,
-            inder: true
+           
         },
        avatar: {
             type: String ,   //cloudinary url
-            required : true,
+            //required : true,
             
         },
          coverImage: {
@@ -34,7 +34,7 @@ const  userSchema   = new  Schema(
         },
         watchHistory:[
             {
-                type: Schema.types.ObjectId,
+                type: Schema.Types.ObjectId,
                 ref: "Video"
             }
         ],
