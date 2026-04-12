@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { User } from "../models/user.models.js";
@@ -399,7 +400,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
     {
       $lookup: {
         from: "subscriptions",
-        localfield: "_id",
+        localField: "_id",
         foreignField: "channel",
         as: "subscribers"
       }
@@ -407,7 +408,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
     {
       $lookup: {
         from: "subscriptions",
-        localfield: "_id",
+        localField: "_id",
         foreignField: "subscriber",
         as: "subscribedTo"
       }
@@ -455,7 +456,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
     )
 })
 
-const getWatchHistory = asyncHandler(async(res,req)=>{
+const getWatchHistory = asyncHandler(async (req, res) => {
   const user = await User.aggregate([
     {
       $match: {
@@ -465,14 +466,14 @@ const getWatchHistory = asyncHandler(async(res,req)=>{
     {
       $lookup:{
         from: "videos",
-        localfield: "watchHistory",
+        localField: "watchHistory",
         foreignField: "_id",
         as: "watchHistory",
-        pipline:[
+        pipeline: [
           {
             $lookup: {
-              from: "username",
-              localfield: "owner",
+              from: "users",
+              localField: "owner",
               foreignField: "_id",
               as: "owner",
               pipeline:[
@@ -499,11 +500,11 @@ const getWatchHistory = asyncHandler(async(res,req)=>{
   ])
 
   return res
-  .status(200)
-  .json(
+    .status(200)
+    .json(
       new ApiResponse(200,
-      user[0].watchHistory,
-      "watchHistory fetched Successfully")
+        user[0]?.watchHistory || [],
+        "watchHistory fetched Successfully")
     )
 })
 
