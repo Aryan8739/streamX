@@ -8,10 +8,12 @@ const getVideoComments = asyncHandler(async (req, res) => {
     const { videoId } = req.params
     const { page = 1, limit = 10 } = req.query
 
+    // validate video id
     if (!isValidObjectId(videoId)) {
         throw new ApiError(400, "Invalid videoId")
     }
 
+    // aggregate comments
     const commentAggregate = Comment.aggregate([
         {
             $match: {
@@ -54,6 +56,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
         limit: parseInt(limit, 10)
     }
 
+    // paginate the result
     const comments = await Comment.aggregatePaginate(commentAggregate, options)
 
     return res
@@ -65,6 +68,7 @@ const addComment = asyncHandler(async (req, res) => {
     const { videoId } = req.params
     const { content } = req.body
 
+    // check video id
     if (!isValidObjectId(videoId)) {
         throw new ApiError(400, "Invalid videoId")
     }
@@ -73,6 +77,7 @@ const addComment = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Comment content is required")
     }
 
+    // create comment
     const comment = await Comment.create({
         content,
         video: videoId,
@@ -92,6 +97,7 @@ const updateComment = asyncHandler(async (req, res) => {
     const { commentId } = req.params
     const { content } = req.body
 
+    // validate comment id
     if (!isValidObjectId(commentId)) {
         throw new ApiError(400, "Invalid commentId")
     }
@@ -100,6 +106,7 @@ const updateComment = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Content is required")
     }
 
+    // find and update
     const comment = await Comment.findById(commentId)
 
     if (!comment) {
@@ -142,6 +149,7 @@ const deleteComment = asyncHandler(async (req, res) => {
         throw new ApiError(403, "You are not authorized to delete this comment")
     }
 
+    // delete from db
     await Comment.findByIdAndDelete(commentId)
 
     return res

@@ -74,7 +74,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   console.log("Avatar path:", avatarLocalPath);
-  // ✅ Upload to Cloudinary
+  //  Upload to Cloudinary
   const avatar = await uploadOnCloudinary(avatarLocalPath);
 
   const coverImage = coverImageLocalPath
@@ -275,6 +275,7 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 })
 
 const updateAccountDetails = asyncHandler(async (req, res) => {
+  // update fields
   const { fullName, email } = req.body
 
   if (!fullName || !email) {
@@ -304,6 +305,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 
 const updateUserAvatar = asyncHandler(async (req, res) => {
 
+  // get file path
   const avatarLocalPath = req.file?.path
 
   if (!avatarLocalPath) {
@@ -311,6 +313,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
 
   }
 
+  // upload new avatar
   const avatar = await uploadOnCloudinary(avatarLocalPath)
 
   if (!avatar.url) {
@@ -320,6 +323,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
 
   }
 
+  // update in db
   const user = await User.findByIdAndUpdate(
     req.user?._id,
     {
@@ -349,6 +353,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
 
 const updateUserCoverImage = asyncHandler(async (req, res) => {
 
+  // get file path
   const coverImageLocalPath = req.file?.path
 
   if (!coverImageLocalPath) {
@@ -356,6 +361,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
 
   }
 
+  // upload to cloudinary
   const coverImage = await uploadOnCloudinary(coverImageLocalPath)
 
   if (!coverImage.url) {
@@ -365,6 +371,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
 
   }
 
+  // update cover image in db
   const user = await User.findByIdAndUpdate(
     req.user?._id,
     {
@@ -384,6 +391,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
 })
 
 const getUserChannelProfile = asyncHandler(async (req, res) => {
+  // get username from params
   const { username } = req.params
 
   if (!username?.trim()) {
@@ -391,6 +399,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
 
   }
 
+  // aggregate channel data
   const channel = await User.aggregate([
     {
       $match: {
@@ -457,6 +466,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
 })
 
 const getWatchHistory = asyncHandler(async (req, res) => {
+  // watch history aggregation
   const user = await User.aggregate([
     {
       $match: {
