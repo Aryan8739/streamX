@@ -1,0 +1,138 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem;
+  height: 64px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.accent-text {
+  color: var(--accent);
+}
+
+.nav-center {
+  flex: 0 1 600px;
+  display: flex;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.nav-center:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.nav-center input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  color: var(--text);
+  outline: none;
+}
+
+.search-btn {
+  padding: 0 1.2rem;
+  background: var(--surface-alt);
+  color: var(--text-muted);
+  transition: var(--transition);
+}
+
+.search-btn:hover {
+  color: var(--text);
+  background: var(--border);
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.icon-btn {
+  color: var(--text-muted);
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-btn:hover {
+  color: var(--text);
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.avatar-sm {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border);
+}
+
+.logout-btn {
+  color: var(--text-muted);
+}
+
+.logout-btn:hover {
+  color: var(--error);
+}
+
+.auth-links {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.btn-text {
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.btn-text:hover {
+  color: var(--text);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #000;
+  padding: 0.5rem 1.25rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.btn-primary:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .nav-center {
+    display: none;
+  }
+}
