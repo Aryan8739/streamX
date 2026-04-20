@@ -1,9 +1,11 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Home, History, ThumbsUp, PlaySquare, Clock, Users, UserCircle, Settings } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import './Sidebar.css';
 
 const Sidebar = () => {
+  const { user } = useAuth();
   const menuItems = [
     { icon: <Home size={20} />, label: 'Home', path: '/' },
     { icon: <Users size={20} />, label: 'Subscriptions', path: '/subscriptions' },
@@ -32,7 +34,10 @@ const Sidebar = () => {
       
       <div className="sidebar-section">
         <h3 className="section-title">Account</h3>
-        <NavLink to="/profile" className="sidebar-link">
+        <NavLink 
+          to={user ? `/profile/${user.username}` : '/login'} 
+          className="sidebar-link"
+        >
           <UserCircle size={20} />
           <span className="label">My Channel</span>
         </NavLink>
