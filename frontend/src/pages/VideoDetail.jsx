@@ -5,6 +5,8 @@ import { formatDistanceToNow } from 'date-fns';
 import apiClient from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import CommentSection from '../components/CommentSection';
+import AddToPlaylistModal from '../components/AddToPlaylistModal';
+import { Plus as SavePlus } from 'lucide-react';
 import './VideoDetail.css';
 
 const VideoDetail = () => {
@@ -13,6 +15,7 @@ const VideoDetail = () => {
   const [video, setVideo] = useState(null);
   const [subscribed, setSubscribed] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+  const [isPlaylistModalOpen, setIsPlaylistModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const fetchVideoData = async () => {
@@ -103,11 +106,20 @@ const VideoDetail = () => {
             <button className="action-btn">
               <Share2 size={18} /> <span>Share</span>
             </button>
+            <button className="action-btn" onClick={() => setIsPlaylistModalOpen(true)}>
+              <SavePlus size={18} /> <span>Save</span>
+            </button>
             <button className="action-btn">
               <MoreVertical size={18} />
             </button>
           </div>
         </div>
+
+        <AddToPlaylistModal 
+          isOpen={isPlaylistModalOpen} 
+          onClose={() => setIsPlaylistModalOpen(false)} 
+          videoId={videoId}
+        />
 
         <div className="video-description glass">
           <div className="description-stats">
