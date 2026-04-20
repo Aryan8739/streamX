@@ -8,6 +8,7 @@ import Signup from './pages/Signup';
 import VideoDetail from './pages/VideoDetail';
 import Profile from './pages/Profile';
 import Playlists from './pages/Playlists';
+import PlaylistDetail from './pages/PlaylistDetail';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import { UIProvider, useUI } from './context/UIContext';
@@ -44,6 +45,7 @@ function AppContent() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/video/:videoId" element={<VideoDetail />} />
             <Route path="/profile/:username" element={<Profile />} />
+            <Route path="/playlist/:playlistId" element={<PlaylistDetail />} />
             {/* Added missing sidebar routes */}
             <Route path="/subscriptions" element={<div className="placeholder">Subscriptions Coming Soon</div>} />
             <Route path="/playlists" element={<Playlists />} />
