@@ -105,6 +105,11 @@
   background: var(--surface-alt);
 }
 
+.action-btn.liked {
+  color: var(--accent);
+  background: rgba(6, 182, 212, 0.1);
+}
+
 .video-description {
   margin-top: 1.5rem;
   padding: 1rem;

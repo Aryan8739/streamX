@@ -4,6 +4,7 @@ import { ThumbsUp, MessageSquare, Share2, MoreVertical, CheckCircle } from 'luci
 import { formatDistanceToNow } from 'date-fns';
 import apiClient from '../api/client';
 import { useAuth } from '../context/AuthContext';
+import CommentSection from '../components/CommentSection';
 import './VideoDetail.css';
 
 const VideoDetail = () => {
@@ -11,25 +12,48 @@ const VideoDetail = () => {
   const { user } = useAuth();
   const [video, setVideo] = useState(null);
   const [subscribed, setSubscribed] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  const fetchVideoData = async () => {
+    try {
+      setLoading(true);
+      const response = await apiClient.get(`/videos/${videoId}`);
+      setVideo(response.data);
+      
+      // Check if user is subscribed or liked
+      // In a real app these would be separate calls or embedded in video data
+      // For this implementation we'll fetch them if possible
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchVideoData = async () => {
-      try {
-        setLoading(true);
-        const response = await apiClient.get(`/videos/${videoId}`);
-        setVideo(response.data);
-        
-        // In a real app, we'd check subscription status
-        setSubscribed(false); 
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchVideoData();
   }, [videoId]);
+
+  const toggleLike = async () => {
+    if (!user) return alert('Please login to like');
+    try {
+      await apiClient.post(`/likes/toggle/v/${videoId}`);
+      setIsLiked(!isLiked);
+    } catch (err) {
+      console.error('Like toggle failed', err);
+    }
+  };
+
+  const toggleSubscribe = async () => {
+    if (!user) return alert('Please login to subscribe');
+    try {
+      await apiClient.post(`/subscriptions/c/${video.owner._id}`);
+      setSubscribed(!subscribed);
+    } catch (err) {
+      console.error('Subscribe toggle failed', err);
+    }
+  };
 
   if (loading) return <div className="video-skeleton">Loading...</div>;
   if (!video) return <div className="error-message">Video not found</div>;
@@ -60,14 +84,21 @@ const VideoDetail = () => {
               </Link>
               <span className="sub-count">1.2M subscribers</span>
             </div>
-            <button className={`sub-btn ${subscribed ? 'subscribed' : ''}`}>
+            <button 
+              className={`sub-btn ${subscribed ? 'subscribed' : ''}`}
+              onClick={toggleSubscribe}
+            >
               {subscribed ? 'Subscribed' : 'Subscribe'}
             </button>
           </div>
 
           <div className="action-buttons">
-            <button className="action-btn">
-              <ThumbsUp size={18} /> <span>{video.views}</span>
+            <button 
+              className={`action-btn ${isLiked ? 'liked' : ''}`}
+              onClick={toggleLike}
+            >
+              <ThumbsUp size={18} fill={isLiked ? "currentColor" : "none"} /> 
+              <span>{video.views}</span>
             </button>
             <button className="action-btn">
               <Share2 size={18} /> <span>Share</span>
@@ -86,7 +117,7 @@ const VideoDetail = () => {
           <p className="description-text">{video.description}</p>
         </div>
 
-        {/* Comments section would go here */}
+        <CommentSection videoId={videoId} />
       </div>
 
       <div className="related-videos">
