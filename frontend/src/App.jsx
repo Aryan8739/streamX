@@ -9,6 +9,12 @@ import VideoDetail from './pages/VideoDetail';
 import Profile from './pages/Profile';
 import Playlists from './pages/Playlists';
 import PlaylistDetail from './pages/PlaylistDetail';
+import LikedVideos from './pages/LikedVideos';
+import Subscriptions from './pages/Subscriptions';
+import History from './pages/History';
+import Settings from './pages/Settings';
+import WatchLater from './pages/WatchLater';
+import Dashboard from './pages/Dashboard';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import { UIProvider, useUI } from './context/UIContext';
@@ -46,13 +52,13 @@ function AppContent() {
             <Route path="/video/:videoId" element={<VideoDetail />} />
             <Route path="/profile/:username" element={<Profile />} />
             <Route path="/playlist/:playlistId" element={<PlaylistDetail />} />
-            {/* Added missing sidebar routes */}
-            <Route path="/subscriptions" element={<div className="placeholder">Subscriptions Coming Soon</div>} />
+            <Route path="/subscriptions" element={<Subscriptions />} />
             <Route path="/playlists" element={<Playlists />} />
-            <Route path="/likes" element={<div className="placeholder">Liked Videos Coming Soon</div>} />
-            <Route path="/history" element={<div className="placeholder">History Coming Soon</div>} />
-            <Route path="/watch-later" element={<div className="placeholder">Watch Later Coming Soon</div>} />
-            <Route path="/settings" element={<div className="placeholder">Settings Coming Soon</div>} />
+            <Route path="/likes" element={<LikedVideos />} />
+            <Route path="/history" element={<History />} />
+            <Route path="/watch-later" element={<WatchLater />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/dashboard" element={<Dashboard />} />
           </Routes>
         </div>
       </div>
