@@ -16,17 +16,17 @@ const VideoDetail = () => {
   const [subscribed, setSubscribed] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [isPlaylistModalOpen, setIsPlaylistModalOpen] = useState(false);
+  const [relatedVideos, setRelatedVideos] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchVideoData = async () => {
     try {
       setLoading(true);
-      const response = await apiClient.get(`/videos/${videoId}`);
-      setVideo(response.data);
+      const videoRes = await apiClient.get(`/videos/${videoId}`);
+      setVideo(videoRes.data);
       
-      // Check if user is subscribed or liked
-      // In a real app these would be separate calls or embedded in video data
-      // For this implementation we'll fetch them if possible
+      const relatedRes = await apiClient.get('/videos');
+      setRelatedVideos(relatedRes.data.videos.filter(v => v._id !== videoId) || []);
     } catch (err) {
       console.error(err);
     } finally {
@@ -132,11 +132,22 @@ const VideoDetail = () => {
         <CommentSection videoId={videoId} />
       </div>
 
-      <div className="related-videos">
+      <aside className="related-videos">
         <h3 className="section-title">Related Videos</h3>
-        {/* Map over related videos */}
-        <p className="text-muted">Coming soon...</p>
-      </div>
+        <div className="related-list">
+          {relatedVideos.map((rv) => (
+            <Link key={rv._id} to={`/video/${rv._id}`} className="related-card">
+              <img src={rv.thumbnail} alt={rv.title} className="related-thumb" />
+              <div className="related-info">
+                <h4 className="related-video-title">{rv.title}</h4>
+                <p className="related-channel">{rv.owner.username}</p>
+                <p className="related-meta">{rv.views} views • {formatDistanceToNow(new Date(rv.createdAt))} ago</p>
+              </div>
+            </Link>
+          ))}
+          {relatedVideos.length === 0 && <p className="text-muted">No related videos</p>}
+        </div>
+      </aside>
     </div>
   );
 };
