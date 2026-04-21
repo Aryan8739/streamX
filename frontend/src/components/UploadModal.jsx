@@ -54,8 +54,17 @@ const UploadModal = ({ isOpen, onClose }) => {
             <div className="upload-left">
               <div className="file-input-wrapper">
                 <div className="file-drop-zone">
-                  <Film size={40} className="accent-text" />
-                  <p>{videoFile ? videoFile.name : 'Select Video File'}</p>
+                  {videoFile ? (
+                    <div className="file-preview">
+                      <Film size={40} className="accent-text" />
+                      <p>{videoFile.name}</p>
+                    </div>
+                  ) : (
+                    <>
+                      <Upload size={40} className="text-muted" />
+                      <p>Select Video File</p>
+                    </>
+                  )}
                   <input 
                     type="file" 
                     accept="video/*" 
@@ -67,8 +76,16 @@ const UploadModal = ({ isOpen, onClose }) => {
 
               <div className="file-input-wrapper">
                 <div className="file-drop-zone thumbnail-zone">
-                  <ImageIcon size={32} />
-                  <p>{thumbnail ? thumbnail.name : 'Select Thumbnail'}</p>
+                  {thumbnail ? (
+                    <div className="thumbnail-preview">
+                      <img src={URL.createObjectURL(thumbnail)} alt="preview" />
+                    </div>
+                  ) : (
+                    <>
+                      <ImageIcon size={32} className="text-muted" />
+                      <p>Select Thumbnail</p>
+                    </>
+                  )}
                   <input 
                     type="file" 
                     accept="image/*" 

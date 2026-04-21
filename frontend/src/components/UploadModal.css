@@ -87,6 +87,25 @@
   height: 120px;
 }
 
+.file-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.thumbnail-preview {
+  width: 100%;
+  height: 100%;
+}
+
+.thumbnail-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+}
+
 .upload-right {
   display: flex;
   flex-direction: column;
