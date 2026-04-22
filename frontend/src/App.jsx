@@ -15,6 +15,7 @@ import History from './pages/History';
 import Settings from './pages/Settings';
 import WatchLater from './pages/WatchLater';
 import Dashboard from './pages/Dashboard';
+import Community from './pages/Community';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import { UIProvider, useUI } from './context/UIContext';
@@ -58,7 +59,8 @@ function AppContent() {
             <Route path="/history" element={<History />} />
             <Route path="/watch-later" element={<WatchLater />} />
             <Route path="/settings" element={<Settings />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/community" element={<Community />} />
           </Routes>
         </div>
       </div>
