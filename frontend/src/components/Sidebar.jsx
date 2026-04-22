@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, History, ThumbsUp, PlaySquare, Clock, Users, UserCircle, Settings, BarChart3 } from 'lucide-react';
+import { Home, History, ThumbsUp, PlaySquare, Clock, Users, UserCircle, Settings, BarChart3, MessageSquare } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import './Sidebar.css';
 
@@ -9,6 +9,7 @@ const Sidebar = () => {
   const menuItems = [
     { icon: <Home size={20} />, label: 'Home', path: '/' },
     { icon: <BarChart3 size={20} />, label: 'Dashboard', path: '/dashboard' },
+    { icon: <MessageSquare size={20} />, label: 'Community', path: '/community' },
     { icon: <Users size={20} />, label: 'Subscriptions', path: '/subscriptions' },
     { icon: <PlaySquare size={20} />, label: 'Playlists', path: '/playlists' },
     { icon: <ThumbsUp size={20} />, label: 'Liked Videos', path: '/likes' },
