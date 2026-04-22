@@ -1,31 +1,81 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import apiClient from '../api/client';
+import { useAuth } from '../context/AuthContext';
 import VideoCard from '../components/VideoCard';
+import TweetCard from '../components/TweetCard';
+import { Send } from 'lucide-react';
 import './Profile.css';
 
 const Profile = () => {
   const { username } = useParams();
+  const { user } = useAuth();
   const [profile, setProfile] = useState(null);
   const [videos, setVideos] = useState([]);
+  const [tweets, setTweets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('Videos');
+  const [tweetContent, setTweetContent] = useState('');
+  const [isPosting, setIsPosting] = useState(false);
+
+  const fetchProfileData = async () => {
+    try {
+      const profileRes = await apiClient.get(`/users/c/${username}`);
+      setProfile(profileRes.data);
+      
+      const videosRes = await apiClient.get(`/videos?username=${username}`);
+      setVideos(videosRes.data.videos || []);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchTweets = async () => {
+    if (!profile) return;
+    try {
+      const response = await apiClient.get(`/tweets/user/${profile._id}`);
+      setTweets(response.data || []);
+    } catch (err) {
+      console.error('Failed to fetch tweets', err);
+    }
+  };
 
   useEffect(() => {
-    const fetchProfileData = async () => {
-      try {
-        const profileRes = await apiClient.get(`/users/c/${username}`);
-        setProfile(profileRes.data);
-        
-        const videosRes = await apiClient.get(`/videos?username=${username}`);
-        setVideos(videosRes.data.videos || []);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchProfileData();
   }, [username]);
+
+  useEffect(() => {
+    if (activeTab === 'Tweets' && profile) {
+      fetchTweets();
+    }
+  }, [activeTab, profile]);
+
+  const handlePostTweet = async (e) => {
+    e.preventDefault();
+    if (!tweetContent.trim()) return;
+    setIsPosting(true);
+    try {
+      await apiClient.post('/tweets', { content: tweetContent });
+      setTweetContent('');
+      fetchTweets();
+    } catch (err) {
+      console.error('Failed to post tweet', err);
+    } finally {
+      setIsPosting(false);
+    }
+  };
+
+  const handleDeleteTweet = async (tweetId) => {
+    if (!window.confirm('Delete this tweet?')) return;
+    try {
+      await apiClient.delete(`/tweets/${tweetId}`);
+      setTweets(tweets.filter(t => t._id !== tweetId));
+    } catch (err) {
+      console.error('Failed to delete tweet', err);
+    }
+  };
 
   if (loading) return <div className="loading">Loading Profile...</div>;
   if (!profile) return <div className="error">User not found</div>;
@@ -48,15 +98,63 @@ const Profile = () => {
 
       <div className="profile-content">
         <div className="tabs">
-          <button className="tab active">Videos</button>
-          <button className="tab">Tweets</button>
-          <button className="tab">Playlists</button>
-          <button className="tab">About</button>
+          {['Videos', 'Tweets', 'Playlists', 'About'].map((tab) => (
+            <button 
+              key={tab} 
+              className={`tab ${activeTab === tab ? 'active' : ''}`}
+              onClick={() => setActiveTab(tab)}
+            >
+              {tab}
+            </button>
+          ))}
         </div>
 
-        <div className="video-grid">
-          {videos.map(video => <VideoCard key={video._id} video={video} />)}
-        </div>
+        {activeTab === 'Videos' && (
+          <div className="video-grid">
+            {videos.map(video => <VideoCard key={video._id} video={video} />)}
+            {videos.length === 0 && <p className="empty-msg">No videos uploaded yet</p>}
+          </div>
+        )}
+
+        {activeTab === 'Tweets' && (
+          <div className="tweets-section">
+            {user?._id === profile?._id && (
+              <form className="tweet-form-container glass" onSubmit={handlePostTweet}>
+                <textarea 
+                  placeholder="What's on your mind?" 
+                  value={tweetContent}
+                  onChange={(e) => setTweetContent(e.target.value)}
+                  maxLength={280}
+                />
+                <div className="tweet-form-footer">
+                  <span className="char-count">{tweetContent.length}/280</span>
+                  <button type="submit" className="tweet-btn" disabled={isPosting || !tweetContent.trim()}>
+                    <Send size={18} /> {isPosting ? 'Posting...' : 'Post'}
+                  </button>
+                </div>
+              </form>
+            )}
+            <div className="tweets-list">
+              {tweets.map(tweet => (
+                <TweetCard 
+                  key={tweet._id} 
+                  tweet={tweet} 
+                  isOwner={user?._id === tweet.owner?._id}
+                  onDelete={handleDeleteTweet}
+                />
+              ))}
+              {tweets.length === 0 && <p className="empty-msg">No tweets yet</p>}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'Playlists' && <p className="empty-msg">Playlists coming soon...</p>}
+        {activeTab === 'About' && (
+          <div className="about-section glass">
+            <h3>Description</h3>
+            <p>{profile.description || "No description provided."}</p>
+          </div>
+        )}
       </div>
     </div>
   );
