@@ -1,0 +1,108 @@
+.tweet-card {
+    padding: 1.25rem;
+    border-radius: 16px;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tweet-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+.tweet-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    position: relative;
+}
+
+.tweet-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--accent-color, #6366f1);
+}
+
+.tweet-user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.tweet-name {
+    font-weight: 600;
+    color: white;
+}
+
+.tweet-username, .tweet-time {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+}
+
+.tweet-dot {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.tweet-actions-owner {
+    margin-left: auto;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.tweet-content {
+    margin-left: 3.5rem;
+    margin-bottom: 1rem;
+}
+
+.tweet-content p {
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.tweet-footer {
+    margin-left: 3.5rem;
+    display: flex;
+    gap: 2rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.tweet-stat {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    padding: 4px;
+    border-radius: 8px;
+}
+
+.tweet-stat:hover {
+    color: var(--accent-color, #6366f1);
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.tweet-stat:hover svg {
+    transform: scale(1.1);
+}
+
+.icon-btn.edit:hover {
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.1);
+}
+
+.icon-btn.delete:hover {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+}
