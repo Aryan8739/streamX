@@ -1,31 +1,63 @@
 import React, { useState, useEffect } from 'react';
 import apiClient from '../api/client';
-import { BarChart3, Video, Users, Eye, Play, Trash2, Edit3 } from 'lucide-react';
+import { BarChart3, Video, Users, Eye, Play, Trash2, Edit3, ToggleLeft, ToggleRight } from 'lucide-react';
+import EditVideoModal from '../components/EditVideoModal';
 import './Dashboard.css';
 
 const Dashboard = () => {
   const [stats, setStats] = useState(null);
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true);
+      const [statsRes, videosRes] = await Promise.all([
+        apiClient.get('/dashboard/stats'),
+        apiClient.get('/dashboard/videos')
+      ]);
+      setStats(statsRes.data);
+      setVideos(videosRes.data || []);
+    } catch (err) {
+      console.error('Dashboard fetch failed', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        setLoading(true);
-        const [statsRes, videosRes] = await Promise.all([
-          apiClient.get('/dashboard/stats'),
-          apiClient.get('/dashboard/videos')
-        ]);
-        setStats(statsRes.data);
-        setVideos(videosRes.data || []);
-      } catch (err) {
-        console.error('Dashboard fetch failed', err);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchDashboardData();
   }, []);
+
+  const handleDeleteVideo = async (videoId) => {
+    if (window.confirm('Are you sure you want to delete this video? This action cannot be undone.')) {
+      try {
+        await apiClient.delete(`/videos/${videoId}`);
+        setVideos(videos.filter(v => v._id !== videoId));
+        // Refresh stats too
+        const statsRes = await apiClient.get('/dashboard/stats');
+        setStats(statsRes.data);
+      } catch (err) {
+        alert(err.message || 'Failed to delete video');
+      }
+    }
+  };
+
+  const handleTogglePublish = async (videoId) => {
+    try {
+      const res = await apiClient.patch(`/videos/toggle/publish/${videoId}`);
+      setVideos(videos.map(v => v._id === videoId ? { ...v, isPublished: res.data.isPublished } : v));
+    } catch (err) {
+      alert(err.message || 'Failed to toggle publish status');
+    }
+  };
+
+  const handleEditClick = (video) => {
+    setSelectedVideo(video);
+    setIsEditModalOpen(true);
+  };
 
   if (loading) return <div className="loading-spinner">Loading Dashboard...</div>;
 
@@ -92,21 +124,38 @@ const Dashboard = () => {
                   <td>
                     <div className="video-cell">
                       <img src={video.thumbnail} alt={video.title} />
-                      <span>{video.title}</span>
+                      <span className="truncate">{video.title}</span>
                     </div>
                   </td>
                   <td>
-                    <span className={`status-badge ${video.isPublished ? 'published' : 'draft'}`}>
-                      {video.isPublished ? 'Published' : 'Draft'}
-                    </span>
+                    <button 
+                      className={`status-btn ${video.isPublished ? 'published' : 'draft'}`}
+                      onClick={() => handleTogglePublish(video._id)}
+                      title="Click to toggle status"
+                    >
+                      {video.isPublished ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
+                      <span>{video.isPublished ? 'Published' : 'Draft'}</span>
+                    </button>
                   </td>
                   <td>{video.views}</td>
                   <td>{video.likesCount || 0}</td>
                   <td>{new Date(video.createdAt).toLocaleDateString()}</td>
                   <td>
                     <div className="action-btns">
-                      <button className="icon-btn edit" title="Edit"><Edit3 size={16} /></button>
-                      <button className="icon-btn delete" title="Delete"><Trash2 size={16} /></button>
+                      <button 
+                        className="icon-btn edit" 
+                        title="Edit"
+                        onClick={() => handleEditClick(video)}
+                      >
+                        <Edit3 size={16} />
+                      </button>
+                      <button 
+                        className="icon-btn delete" 
+                        title="Delete"
+                        onClick={() => handleDeleteVideo(video._id)}
+                      >
+                        <Trash2 size={16} />
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -116,8 +165,16 @@ const Dashboard = () => {
           {videos.length === 0 && <p className="empty-msg">No videos uploaded yet.</p>}
         </div>
       </div>
+
+      <EditVideoModal 
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        video={selectedVideo}
+        onUpdate={fetchDashboardData}
+      />
     </div>
   );
 };
+
 
 export default Dashboard;
