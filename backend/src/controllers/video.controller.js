@@ -156,6 +156,19 @@ const getVideoById = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid videoId")
     }
 
+    // Increment views and add to watch history (move to front of history)
+    await Video.findByIdAndUpdate(videoId, {
+        $inc: { views: 1 }
+    });
+
+    await User.findByIdAndUpdate(req.user?._id, {
+        $pull: { watchHistory: videoId }
+    });
+
+    await User.findByIdAndUpdate(req.user?._id, {
+        $push: { watchHistory: videoId }
+    });
+
     const video = await Video.aggregate([
         {
             $match: {
