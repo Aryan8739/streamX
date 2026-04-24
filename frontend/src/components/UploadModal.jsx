@@ -28,16 +28,16 @@ const UploadModal = ({ isOpen, onClose }) => {
     data.append('thumbnail', thumbnail);
 
     try {
-      const toastId = toast.loading('Uploading your masterpiece...');
+      const toastId = toast.loading('Syncing with Cloudinary...');
       await apiClient.post('/videos', data, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       toast.success('Your video is live!', { id: toastId });
       onClose();
-      // Optional: use a more sophisticated way to refresh the list without reload
-      setTimeout(() => window.location.reload(), 1000);
+      setTimeout(() => window.location.reload(), 1500);
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Upload failed');
+      console.error('Upload Error Details:', err);
+      toast.error(err.message || 'Upload failed. Please check files.', { duration: 5000 });
     } finally {
       setLoading(false);
     }
@@ -45,13 +45,13 @@ const UploadModal = ({ isOpen, onClose }) => {
 
   return (
     <div className="modal-overlay" onClick={(e) => e.target.className === 'modal-overlay' && onClose()}>
-      <div className="upload-modal glass">
+      <div className="upload-modal">
         <div className="modal-header">
           <div className="header-titles">
             <h2 className="modal-title">Publish Video</h2>
             <p className="modal-subtitle">Share your content with the world</p>
           </div>
-          <button className="close-btn" onClick={onClose}><X size={20} /></button>
+          <button className="btn-cancel" onClick={onClose}><X size={20} /></button>
         </div>
 
         <form onSubmit={handleSubmit} className="upload-form">
@@ -64,7 +64,7 @@ const UploadModal = ({ isOpen, onClose }) => {
                   onChange={(e) => setVideoFile(e.target.files[0])} 
                 />
                 <div className="drop-zone-content">
-                  <Film size={24} className="icon" />
+                  <Film size={28} className="icon" />
                   <span>{videoFile ? videoFile.name : 'Choose Video File'}</span>
                 </div>
               </div>
@@ -95,6 +95,7 @@ const UploadModal = ({ isOpen, onClose }) => {
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   placeholder="The best video ever..."
+                  disabled={loading}
                 />
               </div>
 
@@ -106,6 +107,7 @@ const UploadModal = ({ isOpen, onClose }) => {
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="Tell your viewers about your video"
+                  disabled={loading}
                 ></textarea>
               </div>
             </div>

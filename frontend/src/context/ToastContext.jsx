@@ -7,15 +7,23 @@ const ToastContext = createContext();
 export const ToastProvider = ({ children }) => {
   const [toasts, setToasts] = useState([]);
 
-  const addToast = useCallback((message, type = 'info', duration = 3000) => {
-    const id = Math.random().toString(36).substr(2, 9);
-    setToasts((prev) => [...prev, { id, message, type, duration }]);
+  const addToast = useCallback((message, type = 'info', options = {}) => {
+    const { id = Math.random().toString(36).substr(2, 9), duration = 3500 } = options;
+    
+    setToasts((prev) => {
+      const exists = prev.find(t => t.id === id);
+      if (exists) {
+        return prev.map(t => t.id === id ? { ...t, message, type, duration } : t);
+      }
+      return [...prev, { id, message, type, duration }];
+    });
 
-    if (duration !== Infinity) {
+    if (duration !== Infinity && type !== 'loading') {
       setTimeout(() => {
         removeToast(id);
       }, duration);
     }
+    return id;
   }, []);
 
   const removeToast = useCallback((id) => {
@@ -23,10 +31,11 @@ export const ToastProvider = ({ children }) => {
   }, []);
 
   const toast = {
-    success: (msg, dur) => addToast(msg, 'success', dur),
-    error: (msg, dur) => addToast(msg, 'error', dur),
-    info: (msg, dur) => addToast(msg, 'info', dur),
-    loading: (msg, dur) => addToast(msg, 'loading', dur),
+    success: (msg, opts) => addToast(msg, 'success', typeof opts === 'number' ? { duration: opts } : opts),
+    error: (msg, opts) => addToast(msg, 'error', typeof opts === 'number' ? { duration: opts } : opts),
+    info: (msg, opts) => addToast(msg, 'info', typeof opts === 'number' ? { duration: opts } : opts),
+    loading: (msg, opts) => addToast(msg, 'loading', { duration: Infinity, ...opts }),
+    dismiss: (id) => removeToast(id)
   };
 
   return (
@@ -36,16 +45,18 @@ export const ToastProvider = ({ children }) => {
         {toasts.map((t) => (
           <div key={t.id} className={`toast-item glass ${t.type}`}>
             <div className="toast-icon">
-              {t.type === 'success' && <CheckCircle size={20} />}
-              {t.type === 'error' && <AlertCircle size={20} />}
-              {t.type === 'info' && <Info size={20} />}
-              {t.type === 'loading' && <Loader2 size={20} className="animate-spin" />}
+              {t.type === 'success' && <CheckCircle size={18} />}
+              {t.type === 'error' && <AlertCircle size={18} />}
+              {t.type === 'info' && <Info size={18} />}
+              {t.type === 'loading' && <Loader2 size={18} className="animate-spin" />}
             </div>
             <div className="toast-message">{t.message}</div>
             <button className="toast-close" onClick={() => removeToast(t.id)}>
-              <X size={16} />
+              <X size={14} />
             </button>
-            <div className="toast-progress" style={{ animationDuration: `${t.duration}ms` }}></div>
+            {t.duration !== Infinity && (
+              <div className="toast-progress" style={{ animationDuration: `${t.duration}ms` }}></div>
+            )}
           </div>
         ))}
       </div>
