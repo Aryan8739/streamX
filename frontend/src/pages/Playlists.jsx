@@ -4,6 +4,7 @@ import { FolderHeart, Plus, MoreVertical, Edit3, Trash2 } from 'lucide-react';
 import apiClient from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import PlaylistModal from '../components/PlaylistModal';
+import Skeleton from '../components/Skeleton';
 import './Playlists.css';
 
 const Playlists = () => {
@@ -64,48 +65,52 @@ const Playlists = () => {
       </div>
 
       <div className="playlist-grid">
-        {playlists.map((playlist) => (
-          <div key={playlist._id} className="playlist-card glass">
-            <Link to={`/playlist/${playlist._id}`} className="playlist-thumbnail">
-              <div className="thumbnail-stack">
-                <FolderHeart size={48} className="placeholder-icon" />
-                <div className="video-count">
-                  <span>{playlist.videos?.length || 0} videos</span>
+        {loading ? (
+          <Skeleton type="video" count={6} />
+        ) : (
+          playlists.map((playlist) => (
+            <div key={playlist._id} className="playlist-card glass">
+              <Link to={`/playlist/${playlist._id}`} className="playlist-thumbnail">
+                <div className="thumbnail-stack">
+                  <FolderHeart size={48} className="placeholder-icon" />
+                  <div className="video-count">
+                    <span>{playlist.videos?.length || 0} videos</span>
+                  </div>
+                </div>
+              </Link>
+              <div className="playlist-info">
+                <div className="info-main">
+                  <Link to={`/playlist/${playlist._id}`}>
+                    <h3 className="playlist-title">{playlist.name}</h3>
+                  </Link>
+                  <p className="playlist-desc truncate-2">{playlist.description}</p>
+                </div>
+                <div className="card-actions">
+                  <button 
+                    className="icon-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveMenu(activeMenu === playlist._id ? null : playlist._id);
+                    }}
+                  >
+                    <MoreVertical size={18} />
+                  </button>
+                  
+                  {activeMenu === playlist._id && (
+                    <div className="actions-menu glass shadow-lg">
+                      <button className="action-item" onClick={() => openEditModal(playlist)}>
+                        <Edit3 size={16} /> Edit
+                      </button>
+                      <button className="action-item delete" onClick={() => handleDelete(playlist._id)}>
+                        <Trash2 size={16} /> Delete
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
-            </Link>
-            <div className="playlist-info">
-              <div className="info-main">
-                <Link to={`/playlist/${playlist._id}`}>
-                  <h3 className="playlist-title">{playlist.name}</h3>
-                </Link>
-                <p className="playlist-desc truncate-2">{playlist.description}</p>
-              </div>
-              <div className="card-actions">
-                <button 
-                  className="icon-btn"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setActiveMenu(activeMenu === playlist._id ? null : playlist._id);
-                  }}
-                >
-                  <MoreVertical size={18} />
-                </button>
-                
-                {activeMenu === playlist._id && (
-                  <div className="actions-menu glass shadow-lg">
-                    <button className="action-item" onClick={() => openEditModal(playlist)}>
-                      <Edit3 size={16} /> Edit
-                    </button>
-                    <button className="action-item delete" onClick={() => handleDelete(playlist._id)}>
-                      <Trash2 size={16} /> Delete
-                    </button>
-                  </div>
-                )}
-              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
 
       {playlists.length === 0 && !loading && (

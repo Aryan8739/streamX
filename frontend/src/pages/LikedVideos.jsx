@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import apiClient from '../api/client';
 import VideoCard from '../components/VideoCard';
 import { ThumbsUp } from 'lucide-react';
+import Skeleton from '../components/Skeleton';
 import './LikedVideos.css';
 
 const LikedVideos = () => {
@@ -28,22 +29,7 @@ const LikedVideos = () => {
   }, []);
 
   if (loading) {
-    return (
-      <div className="loading-grid">
-        {[...Array(8)].map((_, i) => (
-          <div key={i} className="skeleton-card">
-            <div className="skeleton-thumbnail"></div>
-            <div className="skeleton-info">
-              <div className="skeleton-avatar"></div>
-              <div className="skeleton-text">
-                <div className="skeleton-line"></div>
-                <div className="skeleton-line short"></div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    );
+    return <Skeleton type="video" count={8} />;
   }
 
   if (error) return <div className="error-message">{error}</div>;

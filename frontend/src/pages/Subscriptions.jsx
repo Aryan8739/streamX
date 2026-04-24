@@ -3,6 +3,7 @@ import apiClient from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import { Users, CheckCircle } from 'lucide-react';
+import Skeleton, { SkeletonChannel } from '../components/Skeleton';
 import './Subscriptions.css';
 
 const Subscriptions = () => {
@@ -34,7 +35,7 @@ const Subscriptions = () => {
 
   if (!user) return <div className="auth-prompt">Please login to view your subscriptions.</div>;
 
-  if (loading) return <div className="loading-spinner">Loading Subscriptions...</div>;
+
 
   return (
     <div className="subscriptions-container">
@@ -44,25 +45,34 @@ const Subscriptions = () => {
         </div>
         <div>
           <h1 className="page-title">Subscriptions</h1>
-          <p className="page-subtitle">{channels.length} channels</p>
+          <p className="page-subtitle">{loading ? '...' : channels.length} channels</p>
         </div>
       </div>
 
       <div className="channel-grid">
-        {channels.map((sub) => (
-          <div key={sub._id} className="channel-card glass">
-            <Link to={`/profile/${sub.subscribedChannel.username}`} className="channel-link">
-              <img src={sub.subscribedChannel.avatar} alt={sub.subscribedChannel.username} className="channel-avatar-lg" />
-              <div className="channel-info">
-                <h3 className="channel-name">
-                  {sub.subscribedChannel.username} <CheckCircle size={16} className="verified-icon" />
-                </h3>
-                <p className="channel-meta">1.2M Subscribers</p>
-              </div>
-            </Link>
-            <button className="subscribed-btn">Subscribed</button>
-          </div>
-        ))}
+        {loading ? (
+          <>
+            <SkeletonChannel />
+            <SkeletonChannel />
+            <SkeletonChannel />
+            <SkeletonChannel />
+          </>
+        ) : (
+          channels.map((sub) => (
+            <div key={sub._id} className="channel-card glass">
+              <Link to={`/profile/${sub.subscribedChannel.username}`} className="channel-link">
+                <img src={sub.subscribedChannel.avatar} alt={sub.subscribedChannel.username} className="channel-avatar-lg" />
+                <div className="channel-info">
+                  <h3 className="channel-name">
+                    {sub.subscribedChannel.username} <CheckCircle size={16} className="verified-icon" />
+                  </h3>
+                  <p className="channel-meta">1.2M Subscribers</p>
+                </div>
+              </Link>
+              <button className="subscribed-btn">Subscribed</button>
+            </div>
+          ))
+        )}
       </div>
 
       {channels.length === 0 && (
