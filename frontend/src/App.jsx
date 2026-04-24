@@ -19,6 +19,7 @@ import Community from './pages/Community';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import { UIProvider, useUI } from './context/UIContext';
+import { ToastProvider } from './context/ToastContext';
 import './App.css';
 
 function AppContent() {
@@ -72,7 +73,9 @@ function App() {
   return (
     <AuthProvider>
       <UIProvider>
-        <AppContent />
+        <ToastProvider>
+          <AppContent />
+        </ToastProvider>
       </UIProvider>
     </AuthProvider>
   );

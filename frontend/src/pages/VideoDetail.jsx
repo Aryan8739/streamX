@@ -4,6 +4,7 @@ import { ThumbsUp, MessageSquare, Share2, MoreVertical, CheckCircle, Plus } from
 import { formatDistanceToNow } from 'date-fns';
 import apiClient from '../api/client';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import CommentSection from '../components/CommentSection';
 import AddToPlaylistModal from '../components/AddToPlaylistModal';
 import Skeleton from '../components/Skeleton';
@@ -12,6 +13,7 @@ import './VideoDetail.css';
 const VideoDetail = () => {
   const { videoId } = useParams();
   const { user } = useAuth();
+  const toast = useToast();
   const [video, setVideo] = useState(null);
   const [subscribed, setSubscribed] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
@@ -51,7 +53,7 @@ const VideoDetail = () => {
   }, [videoId, user]);
 
   const toggleLike = async () => {
-    if (!user) return alert('Please login to like');
+    if (!user) return toast.info('Please login to like');
     try {
       const res = await apiClient.post(`/likes/toggle/v/${videoId}`);
       setIsLiked(res.data.isLiked);
@@ -62,12 +64,13 @@ const VideoDetail = () => {
   };
 
   const toggleSubscribe = async () => {
-    if (!user) return alert('Please login to subscribe');
+    if (!user) return toast.info('Please login to subscribe');
     try {
       await apiClient.post(`/subscriptions/c/${video.owner._id}`);
       setSubscribed(!subscribed);
+      toast.success(subscribed ? 'Unsubscribed' : 'Subscribed!');
     } catch (err) {
-      console.error('Subscribe toggle failed', err);
+      toast.error('Could not update subscription');
     }
   };
 
