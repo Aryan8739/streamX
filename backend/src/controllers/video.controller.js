@@ -17,7 +17,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
             $match: {
                 $or: [
                     { title: { $regex: query, $options: "i" } },
-                    { decription: { $regex: query, $options: "i" } }
+                    { description: { $regex: query, $options: "i" } }
                 ]
             }
         });
@@ -117,7 +117,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
 
     const video = await Video.create({
         title,
-        decription: description, // Match model typo
+        description,
         videoFile: videoFile.url,
         thumbnail: thumbnail.url,
         duration: videoFile.duration,
