@@ -534,6 +534,39 @@ const clearWatchHistory = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "Watch history cleared successfully"))
 })
 
+const getWatchLater = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id).populate({
+    path: "watchLater",
+    populate: {
+      path: "owner",
+      select: "username fullname avatar"
+    }
+  })
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user.watchLater || [], "Watch later videos fetched"))
+})
+
+const toggleWatchLater = asyncHandler(async (req, res) => {
+  const { videoId } = req.params
+  
+  const user = await User.findById(req.user._id)
+  const index = user.watchLater.indexOf(videoId)
+
+  if (index === -1) {
+    user.watchLater.push(videoId)
+  } else {
+    user.watchLater.splice(index, 1)
+  }
+
+  await user.save({ validateBeforeSave: false })
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { isWatchLater: index === -1 }, "Watch later toggled"))
+})
+
 export {
   registerUser,
   loginUser,
@@ -546,5 +579,7 @@ export {
   updateUserCoverImage,
   getUserChannelProfile,
   getWatchHistory,
-  clearWatchHistory
+  clearWatchHistory,
+  getWatchLater,
+  toggleWatchLater
 };
