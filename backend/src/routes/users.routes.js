@@ -10,8 +10,7 @@ import {getCurrentUser } from "../controllers/users.controllers.js";
 import {updateAccountDetails } from "../controllers/users.controllers.js";
 import {updateUserAvatar } from "../controllers/users.controllers.js";
 import {updateUserCoverImage } from "../controllers/users.controllers.js";
-import {getUserChannelProfile } from "../controllers/users.controllers.js";
-import {getWatchHistory } from "../controllers/users.controllers.js";
+import { getUserChannelProfile, getWatchHistory, clearWatchHistory } from "../controllers/users.controllers.js";
 
 
 const router = Router()
@@ -38,6 +37,7 @@ router.route("/avatar").patch(verifyJWT,upload.single("avatar"),updateUserAvatar
 router.route("/cover-image").patch(verifyJWT,upload.single("coverImage"),updateUserCoverImage)
 router.route("/c/:username").get(verifyJWT,getUserChannelProfile )
 router.route("/history").get(verifyJWT,getWatchHistory)
+router.route("/history").delete(verifyJWT, clearWatchHistory)
 
 
 export default router
