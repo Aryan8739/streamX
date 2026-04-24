@@ -31,10 +31,10 @@ export const ToastProvider = ({ children }) => {
   }, []);
 
   const toast = {
-    success: (msg, opts) => addToast(msg, 'success', typeof opts === 'number' ? { duration: opts } : opts),
-    error: (msg, opts) => addToast(msg, 'error', typeof opts === 'number' ? { duration: opts } : opts),
-    info: (msg, opts) => addToast(msg, 'info', typeof opts === 'number' ? { duration: opts } : opts),
-    loading: (msg, opts) => addToast(msg, 'loading', { duration: Infinity, ...opts }),
+    success: (msg, opts = {}) => addToast(msg, 'success', typeof opts === 'number' ? { duration: opts } : opts),
+    error: (msg, opts = {}) => addToast(msg, 'error', typeof opts === 'number' ? { duration: opts } : opts),
+    info: (msg, opts = {}) => addToast(msg, 'info', typeof opts === 'number' ? { duration: opts } : opts),
+    loading: (msg, opts = {}) => addToast(msg, 'loading', { duration: Infinity, ...opts }),
     dismiss: (id) => removeToast(id)
   };
 

@@ -17,8 +17,12 @@ const UploadModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!videoFile || !thumbnail) return toast.info('Please select both video and thumbnail');
+    if (e && e.preventDefault) e.preventDefault();
+    
+    if (!videoFile) return toast.info('Video file is required');
+    if (!thumbnail) return toast.info('Thumbnail is required');
+    if (!formData.title.trim()) return toast.info('Title is required');
+    if (!formData.description.trim()) return toast.info('Description is required');
     
     setLoading(true);
     const data = new FormData();
@@ -28,17 +32,23 @@ const UploadModal = ({ isOpen, onClose }) => {
     data.append('thumbnail', thumbnail);
 
     try {
-      const toastId = toast.loading('Syncing with Cloudinary...');
-      await apiClient.post('/videos', data, {
+      const toastId = toast.loading('Step 1: Syncing with Cloudinary...');
+      console.log('DEBUG: Calling API /videos');
+      
+      const response = await apiClient.post('/videos', data, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
+      
+      console.log('DEBUG: API Success:', response);
       toast.success('Your video is live!', { id: toastId });
       onClose();
       setTimeout(() => window.location.reload(), 1500);
     } catch (err) {
-      console.error('Upload Error Details:', err);
+      console.error('DEBUG: Upload Catch Error:', err);
+      alert('Upload failed: ' + (err.message || 'Check console'));
       toast.error(err.message || 'Upload failed. Please check files.', { duration: 5000 });
     } finally {
+      console.log('DEBUG: handleSubmit finished');
       setLoading(false);
     }
   };
@@ -91,7 +101,6 @@ const UploadModal = ({ isOpen, onClose }) => {
                 <label>Video Title</label>
                 <input 
                   type="text" 
-                  required 
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   placeholder="The best video ever..."
@@ -103,7 +112,6 @@ const UploadModal = ({ isOpen, onClose }) => {
                 <label>Description</label>
                 <textarea 
                   rows="6"
-                  required 
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="Tell your viewers about your video"
@@ -115,7 +123,12 @@ const UploadModal = ({ isOpen, onClose }) => {
 
           <div className="modal-footer">
             <button type="button" className="btn-cancel" onClick={onClose} disabled={loading}>Cancel</button>
-            <button type="submit" className="btn-publish" disabled={loading}>
+            <button 
+              type="button" 
+              className="btn-publish" 
+              onClick={handleSubmit}
+              disabled={loading}
+            >
               {loading ? 'Processing...' : 'Publish'}
             </button>
           </div>

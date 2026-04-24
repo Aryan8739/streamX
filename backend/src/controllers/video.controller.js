@@ -32,6 +32,13 @@ const getAllVideos = asyncHandler(async (req, res) => {
                 owner: new mongoose.Types.ObjectId(userId)
             }
         });
+    } else {
+        // Only show published videos on home/discovery
+        pipeline.push({
+            $match: {
+                isPublished: true
+            }
+        });
     }
 
     // Sort
@@ -59,7 +66,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
                 {
                     $project: {
                         username: 1,
-                        "avatar.url": 1,
+                        avatar: 1,
                         fullname: 1
                     }
                 }
@@ -69,6 +76,12 @@ const getAllVideos = asyncHandler(async (req, res) => {
 
     pipeline.push({
         $unwind: "$ownerDetails"
+    });
+
+    pipeline.push({
+        $addFields: {
+            owner: "$ownerDetails"
+        }
     });
 
     const videoAggregate = Video.aggregate(pipeline);
