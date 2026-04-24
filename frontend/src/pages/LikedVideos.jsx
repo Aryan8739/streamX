@@ -15,9 +15,8 @@ const LikedVideos = () => {
       try {
         setLoading(true);
         const response = await apiClient.get('/likes/videos');
-        // The backend might return an array of like objects or directly videos
-        // Usually it's like objects with a video field
-        setVideos(response.data.map(item => item.likedVideo) || []);
+        // The backend returns an array of video objects directly due to $replaceRoot
+        setVideos(response.data || []);
       } catch (err) {
         setError(err.message || 'Failed to fetch liked videos');
       } finally {

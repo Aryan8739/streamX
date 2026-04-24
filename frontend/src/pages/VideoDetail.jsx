@@ -29,17 +29,12 @@ const VideoDetail = () => {
         const videoRes = await apiClient.get(`/videos/${videoId}`);
         setVideo(videoRes.data);
         setLikesCount(videoRes.data.likesCount || 0);
+        setIsLiked(videoRes.data.isLiked || false);
 
         // Fetch related videos (using same category or just random for now)
         const relatedRes = await apiClient.get('/videos?limit=10');
-        setRelatedVideos(relatedRes.data.videos.filter(v => v._id !== videoId) || []);
+        setRelatedVideos(relatedRes.data.docs?.filter(v => v._id !== videoId) || []);
 
-        // Check if user has liked this video
-        if (user) {
-          // Note: Backend should ideally have a check endpoint. 
-          // For now, we simulate or assume based on video metadata if available.
-          // In a real app, you'd call a specific "check-like" endpoint.
-        }
 
       } catch (err) {
         console.error('Fetch video failed', err);
