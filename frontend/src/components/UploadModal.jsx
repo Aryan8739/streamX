@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { X, Upload, Film, Image as ImageIcon } from 'lucide-react';
 import apiClient from '../api/client';
+import { useToast } from '../context/ToastContext';
 import './UploadModal.css';
 
 const UploadModal = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const toast = useToast();
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -17,114 +18,103 @@ const UploadModal = ({ isOpen, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!videoFile || !thumbnail) return toast.info('Please select both video and thumbnail');
+    
     setLoading(true);
-    setError('');
-
     const data = new FormData();
     data.append('title', formData.title);
     data.append('description', formData.description);
-    if (videoFile) data.append('videoFile', videoFile);
-    if (thumbnail) data.append('thumbnail', thumbnail);
+    data.append('videoFile', videoFile);
+    data.append('thumbnail', thumbnail);
 
     try {
+      const toastId = toast.loading('Uploading your masterpiece...');
       await apiClient.post('/videos', data, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
+      toast.success('Your video is live!', { id: toastId });
       onClose();
-      window.location.reload(); // Refresh to see new video
+      // Optional: use a more sophisticated way to refresh the list without reload
+      setTimeout(() => window.location.reload(), 1000);
     } catch (err) {
-      setError(err.message || 'Failed to upload video');
+      toast.error(err.response?.data?.message || 'Upload failed');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="modal-overlay">
+    <div className="modal-overlay" onClick={(e) => e.target.className === 'modal-overlay' && onClose()}>
       <div className="upload-modal glass">
         <div className="modal-header">
-          <h2>Upload Video</h2>
-          <button className="close-btn" onClick={onClose}><X size={24} /></button>
+          <div className="header-titles">
+            <h2 className="modal-title">Publish Video</h2>
+            <p className="modal-subtitle">Share your content with the world</p>
+          </div>
+          <button className="close-btn" onClick={onClose}><X size={20} /></button>
         </div>
-
-        {error && <div className="error-message">{error}</div>}
 
         <form onSubmit={handleSubmit} className="upload-form">
           <div className="upload-grid">
             <div className="upload-left">
-              <div className="file-input-wrapper">
-                <div className="file-drop-zone">
-                  {videoFile ? (
-                    <div className="file-preview">
-                      <Film size={40} className="accent-text" />
-                      <p>{videoFile.name}</p>
-                    </div>
-                  ) : (
-                    <>
-                      <Upload size={40} className="text-muted" />
-                      <p>Select Video File</p>
-                    </>
-                  )}
-                  <input 
-                    type="file" 
-                    accept="video/*" 
-                    required 
-                    onChange={(e) => setVideoFile(e.target.files[0])} 
-                  />
+              <div className={`file-drop-zone ${videoFile ? 'has-file' : ''}`}>
+                <input 
+                  type="file" 
+                  accept="video/*" 
+                  onChange={(e) => setVideoFile(e.target.files[0])} 
+                />
+                <div className="drop-zone-content">
+                  <Film size={24} className="icon" />
+                  <span>{videoFile ? videoFile.name : 'Choose Video File'}</span>
                 </div>
               </div>
 
-              <div className="file-input-wrapper">
-                <div className="file-drop-zone thumbnail-zone">
-                  {thumbnail ? (
-                    <div className="thumbnail-preview">
-                      <img src={URL.createObjectURL(thumbnail)} alt="preview" />
-                    </div>
-                  ) : (
-                    <>
-                      <ImageIcon size={32} className="text-muted" />
-                      <p>Select Thumbnail</p>
-                    </>
-                  )}
-                  <input 
-                    type="file" 
-                    accept="image/*" 
-                    required 
-                    onChange={(e) => setThumbnail(e.target.files[0])} 
-                  />
-                </div>
+              <div className={`file-drop-zone thumbnail-zone ${thumbnail ? 'has-file' : ''}`}>
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  onChange={(e) => setThumbnail(e.target.files[0])} 
+                />
+                {thumbnail ? (
+                  <img src={URL.createObjectURL(thumbnail)} alt="preview" className="thumbnail-preview" />
+                ) : (
+                  <div className="drop-zone-content">
+                    <ImageIcon size={24} className="icon" />
+                    <span>Select Thumbnail</span>
+                  </div>
+                )}
               </div>
             </div>
 
             <div className="upload-right">
               <div className="input-group">
-                <label>Title</label>
+                <label>Video Title</label>
                 <input 
                   type="text" 
                   required 
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  placeholder="Enter a catchy title"
+                  placeholder="The best video ever..."
                 />
               </div>
 
               <div className="input-group">
                 <label>Description</label>
                 <textarea 
-                  rows="5"
+                  rows="6"
                   required 
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="What's your video about?"
+                  placeholder="Tell your viewers about your video"
                 ></textarea>
               </div>
             </div>
           </div>
 
           <div className="modal-footer">
-            <button type="button" className="btn-secondary" onClick={onClose} disabled={loading}>Cancel</button>
-            <button type="submit" className="btn-primary" disabled={loading}>
-              {loading ? 'Uploading...' : 'Publish Video'}
+            <button type="button" className="btn-cancel" onClick={onClose} disabled={loading}>Cancel</button>
+            <button type="submit" className="btn-publish" disabled={loading}>
+              {loading ? 'Processing...' : 'Publish'}
             </button>
           </div>
         </form>
