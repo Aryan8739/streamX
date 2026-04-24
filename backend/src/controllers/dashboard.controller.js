@@ -60,7 +60,33 @@ const getChannelVideos = asyncHandler(async (req, res) => {
     // get channel id
     const channelId = req.user?._id;
 
-    const videos = await Video.find({ owner: channelId }).sort({ createdAt: -1 });
+    const videos = await Video.aggregate([
+        {
+            $match: {
+                owner: new mongoose.Types.ObjectId(channelId)
+            }
+        },
+        {
+            $lookup: {
+                from: "likes",
+                localField: "_id",
+                foreignField: "video",
+                as: "likes"
+            }
+        },
+        {
+            $addFields: {
+                likesCount: {
+                    $size: "$likes"
+                }
+            }
+        },
+        {
+            $sort: {
+                createdAt: -1
+            }
+        }
+    ]);
 
     return res
         .status(200)
