@@ -10,7 +10,7 @@ import {getCurrentUser } from "../controllers/users.controllers.js";
 import {updateAccountDetails } from "../controllers/users.controllers.js";
 import {updateUserAvatar } from "../controllers/users.controllers.js";
 import {updateUserCoverImage } from "../controllers/users.controllers.js";
-import { getUserChannelProfile, getWatchHistory, clearWatchHistory } from "../controllers/users.controllers.js";
+import { getUserChannelProfile, getWatchHistory, clearWatchHistory, getWatchLater, toggleWatchLater } from "../controllers/users.controllers.js";
 
 
 const router = Router()
@@ -38,6 +38,8 @@ router.route("/cover-image").patch(verifyJWT,upload.single("coverImage"),updateU
 router.route("/c/:username").get(verifyJWT,getUserChannelProfile )
 router.route("/history").get(verifyJWT,getWatchHistory)
 router.route("/history").delete(verifyJWT, clearWatchHistory)
+router.route("/watch-later").get(verifyJWT, getWatchLater)
+router.route("/watch-later/:videoId").post(verifyJWT, toggleWatchLater)
 
 
 export default router
