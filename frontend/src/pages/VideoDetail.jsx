@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ThumbsUp, MessageSquare, Share2, MoreVertical, CheckCircle, Plus } from 'lucide-react';
+import { ThumbsUp, MessageSquare, Share2, MoreVertical, CheckCircle, Plus, Clock, Film } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import apiClient from '../api/client';
 import { useAuth } from '../context/AuthContext';
@@ -17,8 +17,10 @@ const VideoDetail = () => {
   const [video, setVideo] = useState(null);
   const [subscribed, setSubscribed] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+  const [isWatchLater, setIsWatchLater] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
   const [isPlaylistModalOpen, setIsPlaylistModalOpen] = useState(false);
+  const [showMore, setShowMore] = useState(false);
   const [relatedVideos, setRelatedVideos] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -30,6 +32,7 @@ const VideoDetail = () => {
         setVideo(videoRes.data);
         setLikesCount(videoRes.data.likesCount || 0);
         setIsLiked(videoRes.data.isLiked || false);
+        setIsWatchLater(videoRes.data.isWatchLater || false);
 
         // Fetch related videos (using same category or just random for now)
         const relatedRes = await apiClient.get('/videos?limit=10');
@@ -56,6 +59,23 @@ const VideoDetail = () => {
     } catch (err) {
       console.error('Like toggle failed', err);
     }
+  };
+
+  const handleShare = () => {
+    navigator.clipboard.writeText(window.location.href);
+    toast.success('Link copied to clipboard!');
+  };
+
+  const toggleWatchLater = async () => {
+    if (!user) return toast.info('Please login to use Watch Later');
+    try {
+      const res = await apiClient.post(`/users/watch-later/${videoId}`);
+      setIsWatchLater(res.data.isWatchLater);
+      toast.success(res.data.isWatchLater ? 'Added to Watch Later' : 'Removed from Watch Later');
+    } catch (err) {
+      toast.error('Failed to update Watch Later');
+    }
+    setShowMore(false);
   };
 
   const toggleSubscribe = async () => {
@@ -134,15 +154,28 @@ const VideoDetail = () => {
               <ThumbsUp size={18} fill={isLiked ? "currentColor" : "none"} />
               <span>{likesCount}</span>
             </button>
-            <button className="action-btn">
+            <button className="action-btn" onClick={handleShare}>
               <Share2 size={18} /> <span>Share</span>
             </button>
             <button className="action-btn" onClick={() => setIsPlaylistModalOpen(true)}>
               <Plus size={18} /> <span>Save</span>
             </button>
-            <button className="action-btn">
-              <MoreVertical size={18} />
-            </button>
+            <div className="more-options-wrapper">
+              <button className="action-btn" onClick={() => setShowMore(!showMore)}>
+                <MoreVertical size={18} />
+              </button>
+              {showMore && (
+                <div className="more-dropdown glass">
+                  <button onClick={toggleWatchLater}>
+                    <Clock size={16} /> 
+                    <span>{isWatchLater ? 'Remove from Watch Later' : 'Watch Later'}</span>
+                  </button>
+                  <a href={video.videoFile} download target="_blank" rel="noreferrer">
+                    <Film size={16} /> <span>Download Video</span>
+                  </a>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
