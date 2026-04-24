@@ -1,33 +1,37 @@
 .community-container {
-  max-width: 700px;
-  margin: 2rem auto;
-  padding: 0 1.5rem 5rem;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem 8rem;
 }
 
 .tweet-form-container {
-  padding: 1.5rem;
-  border-radius: var(--radius-lg);
-  margin-bottom: 2rem;
+  padding: 0;
+  background: transparent;
+  backdrop-filter: none;
+  border: none;
+  margin-bottom: 4rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
 .tweet-form-container textarea {
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
   color: var(--text);
-  font-size: 1.1rem;
+  font-size: 1rem;
   resize: none;
-  min-height: 100px;
-  padding: 0.5rem 0;
+  min-height: 120px;
+  padding: 1.25rem;
   transition: var(--transition);
+  line-height: 1.6;
 }
 
 .tweet-form-container textarea:focus {
   outline: none;
-  border-color: var(--accent);
+  border-color: var(--text-muted);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.03);
 }
 
 .tweet-form-footer {
@@ -37,16 +41,18 @@
 }
 
 .char-count {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--text-muted);
+  font-weight: 500;
 }
 
 .tweet-btn {
-  background: var(--accent);
-  color: #000;
-  padding: 0.6rem 1.75rem;
+  background: var(--text);
+  color: var(--background);
+  padding: 0.75rem 2rem;
   border-radius: var(--radius-full);
-  font-weight: 700;
+  font-weight: 600;
+  font-size: 0.9rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -54,29 +60,17 @@
 }
 
 .tweet-btn:hover:not(:disabled) {
-  background: var(--accent-hover);
-  transform: translateY(-2px);
-}
-
-.tweet-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+  opacity: 0.9;
+  transform: translateY(-1px);
 }
 
 .tweets-list {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-}
-
-.empty-msg {
-  text-align: center;
-  color: var(--text-muted);
-  padding: 4rem 0;
 }
 
 @media (max-width: 640px) {
   .community-container {
-    padding: 0 1rem 4rem;
+    padding: 2rem 1rem 4rem;
   }
 }
