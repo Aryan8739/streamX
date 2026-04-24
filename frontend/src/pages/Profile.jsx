@@ -23,8 +23,9 @@ const Profile = () => {
       const profileRes = await apiClient.get(`/users/c/${username}`);
       setProfile(profileRes.data);
       
-      const videosRes = await apiClient.get(`/videos?username=${username}`);
-      setVideos(videosRes.data.videos || []);
+      const videosRes = await apiClient.get(`/videos?userId=${profileRes.data._id}`);
+      // aggregatePaginate returns results in the 'docs' field
+      setVideos(videosRes.data.docs || []);
     } catch (err) {
       console.error(err);
     } finally {

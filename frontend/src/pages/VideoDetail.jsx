@@ -78,18 +78,18 @@ const VideoDetail = () => {
     return (
       <div className="video-detail-container">
         <div className="main-video-section">
-           <div className="skeleton skeleton-thumbnail" style={{ aspectRatio: '16/9' }} />
-           <div className="skeleton skeleton-line" style={{ marginTop: '1.5rem', height: '30px', width: '70%' }} />
-           <div className="detail-meta" style={{ marginTop: '2rem' }}>
-              <div className="skeleton skeleton-avatar" style={{ width: '48px', height: '48px' }} />
-              <div className="skeleton-text-group">
-                 <div className="skeleton skeleton-line" style={{ width: '120px' }} />
-                 <div className="skeleton skeleton-line short" />
-              </div>
-           </div>
+          <div className="skeleton skeleton-thumbnail" style={{ aspectRatio: '16/9' }} />
+          <div className="skeleton skeleton-line" style={{ marginTop: '1.5rem', height: '30px', width: '70%' }} />
+          <div className="detail-meta" style={{ marginTop: '2rem' }}>
+            <div className="skeleton skeleton-avatar" style={{ width: '48px', height: '48px' }} />
+            <div className="skeleton-text-group">
+              <div className="skeleton skeleton-line" style={{ width: '120px' }} />
+              <div className="skeleton skeleton-line short" />
+            </div>
+          </div>
         </div>
         <aside className="related-videos">
-           <Skeleton type="video" count={4} />
+          <Skeleton type="video" count={4} />
         </aside>
       </div>
     );
@@ -101,17 +101,17 @@ const VideoDetail = () => {
     <div className="video-detail-container">
       <div className="main-video-section">
         <div className="player-wrapper">
-          <video 
-            src={video.videoFile} 
-            controls 
-            autoPlay 
+          <video
+            src={video.videoFile}
+            controls
+            autoPlay
             className="video-player"
             poster={video.thumbnail}
           ></video>
         </div>
 
         <h1 className="detail-title">{video.title}</h1>
-        
+
         <div className="detail-meta">
           <div className="channel-info">
             <Link to={`/profile/${video.owner.username}`}>
@@ -123,7 +123,7 @@ const VideoDetail = () => {
               </Link>
               <span className="sub-count">1.2M subscribers</span>
             </div>
-            <button 
+            <button
               className={`sub-btn ${subscribed ? 'subscribed' : ''}`}
               onClick={toggleSubscribe}
             >
@@ -132,11 +132,11 @@ const VideoDetail = () => {
           </div>
 
           <div className="action-buttons">
-            <button 
+            <button
               className={`action-btn ${isLiked ? 'liked' : ''}`}
               onClick={toggleLike}
             >
-              <ThumbsUp size={18} fill={isLiked ? "currentColor" : "none"} /> 
+              <ThumbsUp size={18} fill={isLiked ? "currentColor" : "none"} />
               <span>{likesCount}</span>
             </button>
             <button className="action-btn">
@@ -151,9 +151,9 @@ const VideoDetail = () => {
           </div>
         </div>
 
-        <AddToPlaylistModal 
-          isOpen={isPlaylistModalOpen} 
-          onClose={() => setIsPlaylistModalOpen(false)} 
+        <AddToPlaylistModal
+          isOpen={isPlaylistModalOpen}
+          onClose={() => setIsPlaylistModalOpen(false)}
           videoId={videoId}
         />
 
@@ -176,7 +176,7 @@ const VideoDetail = () => {
               <div className="related-thumb-container">
                 <img src={rv.thumbnail} alt={rv.title} className="related-thumb" />
                 <span className="duration-tag">
-                   {Math.floor(rv.duration / 60)}:{Math.floor(rv.duration % 60).toString().padStart(2, '0')}
+                  {Math.floor(rv.duration / 60)}:{Math.floor(rv.duration % 60).toString().padStart(2, '0')}
                 </span>
               </div>
               <div className="related-info">

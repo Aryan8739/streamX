@@ -30,7 +30,8 @@ const Home = () => {
         endpoint += `sortBy=${sort.field}&sortType=${sort.type}`;
         
         const response = await apiClient.get(endpoint);
-        setVideos(response.data.videos || []);
+        // aggregatePaginate returns results in the 'docs' field
+        setVideos(response.data.docs || []);
       } catch (err) {
         setError(err.message || 'Failed to fetch videos');
       } finally {
