@@ -18,13 +18,14 @@ import Dashboard from './pages/Dashboard';
 import Community from './pages/Community';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
+import UploadModal from './components/UploadModal';
 import { UIProvider, useUI } from './context/UIContext';
 import { ToastProvider } from './context/ToastContext';
 import './App.css';
 
 function AppContent() {
   const { user, loading } = useAuth();
-  const { sidebarOpen } = useUI();
+  const { sidebarOpen, isUploadOpen, closeUpload } = useUI();
   const location = useLocation();
   
   // Define paths that shouldn't show the sidebar (Login, Signup)
@@ -65,6 +66,7 @@ function AppContent() {
           </Routes>
         </div>
       </div>
+      <UploadModal isOpen={isUploadOpen} onClose={closeUpload} />
     </div>
   );
 }

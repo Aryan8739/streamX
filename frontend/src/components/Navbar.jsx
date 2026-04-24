@@ -3,14 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Search, Video, Bell, User, LogOut, Menu } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useUI } from '../context/UIContext';
-import UploadModal from './UploadModal';
 import './Navbar.css';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
-  const { toggleSidebar } = useUI();
+  const { toggleSidebar, openUpload } = useUI();
   const [searchQuery, setSearchQuery] = useState('');
-  const [isUploadOpen, setIsUploadOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleSearch = (e) => {
@@ -51,7 +49,7 @@ const Navbar = () => {
             <button 
               className="icon-btn" 
               title="Upload Video"
-              onClick={() => setIsUploadOpen(true)}
+              onClick={openUpload}
             >
               <Video size={22} />
             </button>
@@ -74,10 +72,6 @@ const Navbar = () => {
           </div>
         )}
       </div>
-      <UploadModal 
-        isOpen={isUploadOpen} 
-        onClose={() => setIsUploadOpen(false)} 
-      />
     </nav>
   );
 };

@@ -45,7 +45,6 @@ const UploadModal = ({ isOpen, onClose }) => {
       setTimeout(() => window.location.reload(), 1500);
     } catch (err) {
       console.error('DEBUG: Upload Catch Error:', err);
-      alert('Upload failed: ' + (err.message || 'Check console'));
       toast.error(err.message || 'Upload failed. Please check files.', { duration: 5000 });
     } finally {
       console.log('DEBUG: handleSubmit finished');
@@ -61,7 +60,7 @@ const UploadModal = ({ isOpen, onClose }) => {
             <h2 className="modal-title">Publish Video</h2>
             <p className="modal-subtitle">Share your content with the world</p>
           </div>
-          <button className="btn-cancel" onClick={onClose}><X size={20} /></button>
+          <button className="modal-close-btn" onClick={onClose}><X size={24} /></button>
         </div>
 
         <form onSubmit={handleSubmit} className="upload-form">
