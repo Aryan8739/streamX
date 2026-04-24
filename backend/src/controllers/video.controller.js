@@ -214,6 +214,13 @@ const getVideoById = asyncHandler(async (req, res) => {
                         then: true,
                         else: false
                     }
+                },
+                isWatchLater: {
+                    $cond: {
+                        if: { $in: [new mongoose.Types.ObjectId(videoId), (req.user?.watchLater || [])] },
+                        then: true,
+                        else: false
+                    }
                 }
             }
         }
