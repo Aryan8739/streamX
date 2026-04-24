@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ThumbsUp, MessageSquare, Share2, MoreVertical, CheckCircle } from 'lucide-react';
+import { ThumbsUp, MessageSquare, Share2, MoreVertical, CheckCircle, Plus } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import apiClient from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import CommentSection from '../components/CommentSection';
 import AddToPlaylistModal from '../components/AddToPlaylistModal';
-import { Plus as SavePlus } from 'lucide-react';
+import Skeleton from '../components/Skeleton';
 import './VideoDetail.css';
 
 const VideoDetail = () => {
@@ -15,34 +15,47 @@ const VideoDetail = () => {
   const [video, setVideo] = useState(null);
   const [subscribed, setSubscribed] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(0);
   const [isPlaylistModalOpen, setIsPlaylistModalOpen] = useState(false);
   const [relatedVideos, setRelatedVideos] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchVideoData = async () => {
-    try {
-      setLoading(true);
-      const videoRes = await apiClient.get(`/videos/${videoId}`);
-      setVideo(videoRes.data);
-      
-      const relatedRes = await apiClient.get('/videos');
-      setRelatedVideos(relatedRes.data.videos.filter(v => v._id !== videoId) || []);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchVideoData = async () => {
+      try {
+        setLoading(true);
+        const videoRes = await apiClient.get(`/videos/${videoId}`);
+        setVideo(videoRes.data);
+        setLikesCount(videoRes.data.likesCount || 0);
+
+        // Fetch related videos (using same category or just random for now)
+        const relatedRes = await apiClient.get('/videos?limit=10');
+        setRelatedVideos(relatedRes.data.videos.filter(v => v._id !== videoId) || []);
+
+        // Check if user has liked this video
+        if (user) {
+          // Note: Backend should ideally have a check endpoint. 
+          // For now, we simulate or assume based on video metadata if available.
+          // In a real app, you'd call a specific "check-like" endpoint.
+        }
+
+      } catch (err) {
+        console.error('Fetch video failed', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchVideoData();
-  }, [videoId]);
+    window.scrollTo(0, 0);
+  }, [videoId, user]);
 
   const toggleLike = async () => {
     if (!user) return alert('Please login to like');
     try {
-      await apiClient.post(`/likes/toggle/v/${videoId}`);
-      setIsLiked(!isLiked);
+      const res = await apiClient.post(`/likes/toggle/v/${videoId}`);
+      setIsLiked(res.data.isLiked);
+      setLikesCount(prev => res.data.isLiked ? prev + 1 : prev - 1);
     } catch (err) {
       console.error('Like toggle failed', err);
     }
@@ -58,7 +71,27 @@ const VideoDetail = () => {
     }
   };
 
-  if (loading) return <div className="video-skeleton">Loading...</div>;
+  if (loading) {
+    return (
+      <div className="video-detail-container">
+        <div className="main-video-section">
+           <div className="skeleton skeleton-thumbnail" style={{ aspectRatio: '16/9' }} />
+           <div className="skeleton skeleton-line" style={{ marginTop: '1.5rem', height: '30px', width: '70%' }} />
+           <div className="detail-meta" style={{ marginTop: '2rem' }}>
+              <div className="skeleton skeleton-avatar" style={{ width: '48px', height: '48px' }} />
+              <div className="skeleton-text-group">
+                 <div className="skeleton skeleton-line" style={{ width: '120px' }} />
+                 <div className="skeleton skeleton-line short" />
+              </div>
+           </div>
+        </div>
+        <aside className="related-videos">
+           <Skeleton type="video" count={4} />
+        </aside>
+      </div>
+    );
+  }
+
   if (!video) return <div className="error-message">Video not found</div>;
 
   return (
@@ -101,13 +134,13 @@ const VideoDetail = () => {
               onClick={toggleLike}
             >
               <ThumbsUp size={18} fill={isLiked ? "currentColor" : "none"} /> 
-              <span>{video.views}</span>
+              <span>{likesCount}</span>
             </button>
             <button className="action-btn">
               <Share2 size={18} /> <span>Share</span>
             </button>
             <button className="action-btn" onClick={() => setIsPlaylistModalOpen(true)}>
-              <SavePlus size={18} /> <span>Save</span>
+              <Plus size={18} /> <span>Save</span>
             </button>
             <button className="action-btn">
               <MoreVertical size={18} />
@@ -137,15 +170,20 @@ const VideoDetail = () => {
         <div className="related-list">
           {relatedVideos.map((rv) => (
             <Link key={rv._id} to={`/video/${rv._id}`} className="related-card">
-              <img src={rv.thumbnail} alt={rv.title} className="related-thumb" />
+              <div className="related-thumb-container">
+                <img src={rv.thumbnail} alt={rv.title} className="related-thumb" />
+                <span className="duration-tag">
+                   {Math.floor(rv.duration / 60)}:{Math.floor(rv.duration % 60).toString().padStart(2, '0')}
+                </span>
+              </div>
               <div className="related-info">
                 <h4 className="related-video-title">{rv.title}</h4>
-                <p className="related-channel">{rv.owner.username}</p>
+                <p className="related-channel">{rv.owner?.username}</p>
                 <p className="related-meta">{rv.views} views • {formatDistanceToNow(new Date(rv.createdAt))} ago</p>
               </div>
             </Link>
           ))}
-          {relatedVideos.length === 0 && <p className="text-muted">No related videos</p>}
+          {!loading && relatedVideos.length === 0 && <p className="text-muted">No related videos found</p>}
         </div>
       </aside>
     </div>
