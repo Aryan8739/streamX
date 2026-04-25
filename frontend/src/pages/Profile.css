@@ -171,6 +171,35 @@
   line-height: 1.6;
 }
 
+/* Playlists Section */
+.playlists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.playlist-item {
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.playlist-item:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+}
+
+.playlist-info-card h4 {
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.playlist-info-card p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
 /* Utils */
 .empty-msg {
   text-align: center;

@@ -211,9 +211,35 @@ const Settings = () => {
             </div>
           )}
 
-          {activeTab !== 'account' && activeTab !== 'security' && (
+          {activeTab === 'appearance' && (
+            <div className="settings-section">
+              <h2>Appearance</h2>
+              <div className="appearance-settings">
+                <div className="setting-item glass">
+                  <div className="setting-info">
+                    <h4>Dark Mode</h4>
+                    <p>Use the dark theme across the application</p>
+                  </div>
+                  <div className="setting-control">
+                    <button className="toggle-btn active">Enabled</button>
+                  </div>
+                </div>
+                <div className="setting-item glass disabled">
+                  <div className="setting-info">
+                    <h4>Light Mode</h4>
+                    <p>Coming in future updates</p>
+                  </div>
+                  <div className="setting-control">
+                    <button className="toggle-btn" disabled>Unavailable</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab !== 'account' && activeTab !== 'security' && activeTab !== 'appearance' && (
             <div className="empty-section">
-              <p>{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} settings coming soon...</p>
+              <p>{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} settings are being finalized.</p>
             </div>
           )}
         </main>

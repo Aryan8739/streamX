@@ -18,6 +18,7 @@ const Profile = () => {
   const [activeTab, setActiveTab] = useState('Videos');
   const [tweetContent, setTweetContent] = useState('');
   const [isPosting, setIsPosting] = useState(false);
+  const [playlists, setPlaylists] = useState([]);
 
   const fetchProfileData = async () => {
     try {
@@ -52,7 +53,19 @@ const Profile = () => {
     if (activeTab === 'Tweets' && profile) {
       fetchTweets();
     }
+    if (activeTab === 'Playlists' && profile) {
+      fetchPlaylists();
+    }
   }, [activeTab, profile]);
+
+  const fetchPlaylists = async () => {
+    try {
+      const res = await apiClient.get(`/playlists/user/${profile._id}`);
+      setPlaylists(res.data || []);
+    } catch (err) {
+      console.error('Failed to fetch playlists', err);
+    }
+  };
 
   const handlePostTweet = async (e) => {
     e.preventDefault();
@@ -150,7 +163,19 @@ const Profile = () => {
           </div>
         )}
 
-        {activeTab === 'Playlists' && <p className="empty-msg">Playlists coming soon...</p>}
+        {activeTab === 'Playlists' && (
+          <div className="playlists-grid">
+            {playlists.map(playlist => (
+              <div key={playlist._id} className="playlist-item glass">
+                <div className="playlist-info-card">
+                  <h4>{playlist.name}</h4>
+                  <p>{playlist.videos?.length || 0} videos</p>
+                </div>
+              </div>
+            ))}
+            {playlists.length === 0 && <p className="empty-msg">No playlists created yet</p>}
+          </div>
+        )}
         {activeTab === 'About' && (
           <div className="about-section glass">
             <h3>Description</h3>

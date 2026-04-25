@@ -66,7 +66,7 @@ const Subscriptions = () => {
                   <h3 className="channel-name">
                     {sub.channel.username} <CheckCircle size={16} className="verified-icon" />
                   </h3>
-                  <p className="channel-meta">1.2M Subscribers</p>
+                  <p className="channel-meta">{sub.channel.subscribersCount || 0} Subscribers</p>
                 </div>
               </Link>
               <button className="subscribed-btn">Subscribed</button>
