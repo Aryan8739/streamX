@@ -57,7 +57,29 @@ const getUserTweets = asyncHandler(async (req, res) => {
             }
         },
         {
-            $unwind: "$ownerDetails"
+            $lookup: {
+                from: "likes",
+                localField: "_id",
+                foreignField: "tweet",
+                as: "likes"
+            }
+        },
+        {
+            $addFields: {
+                ownerDetails: {
+                    $first: "$ownerDetails"
+                },
+                likesCount: {
+                    $size: "$likes"
+                },
+                isLiked: {
+                    $cond: {
+                        if: { $in: [req.user?._id, "$likes.likedBy"] },
+                        then: true,
+                        else: false
+                    }
+                }
+            }
         },
         {
             $sort: {
@@ -132,9 +154,44 @@ const deleteTweet = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, {}, "Tweet deleted successfully"))
 })
 
+const getAllTweets = asyncHandler(async (req, res) => {
+    const tweets = await Tweet.aggregate([
+        {
+            $lookup: {
+                from: "users",
+                localField: "owner",
+                foreignField: "_id",
+                as: "ownerDetails",
+                pipeline: [
+                    {
+                        $project: {
+                            username: 1,
+                            fullname: 1,
+                            avatar: 1
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            $unwind: "$ownerDetails"
+        },
+        {
+            $sort: {
+                createdAt: -1
+            }
+        }
+    ])
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, tweets, "All tweets fetched successfully"))
+})
+
 export {
     createTweet,
     getUserTweets,
     updateTweet,
-    deleteTweet
+    deleteTweet,
+    getAllTweets
 }
