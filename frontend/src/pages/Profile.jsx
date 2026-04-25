@@ -91,6 +91,22 @@ const Profile = () => {
       console.error('Failed to delete tweet', err);
     }
   };
+  const handleToggleSubscription = async () => {
+    if (!user) {
+      alert('Please login to subscribe');
+      return;
+    }
+    try {
+      const res = await apiClient.post(`/subscriptions/c/${profile._id}`);
+      setProfile(prev => ({
+        ...prev,
+        isSubscribed: res.data.isSubscribed,
+        subscribersCount: res.data.isSubscribed ? prev.subscribersCount + 1 : prev.subscribersCount - 1
+      }));
+    } catch (err) {
+      console.error('Subscription toggle failed', err);
+    }
+  };
 
   if (loading) return <Skeleton type="channel" />;
   if (!profile) return <div className="error">User not found</div>;
@@ -107,7 +123,16 @@ const Profile = () => {
             <h1 className="profile-name">{profile.fullName}</h1>
             <p className="profile-username">@{profile.username} • {profile.subscribersCount} subscribers</p>
           </div>
-          <button className="sub-btn">Subscribe</button>
+          {user?._id !== profile?._id ? (
+            <button 
+              className={`sub-btn ${profile.isSubscribed ? 'subscribed' : ''}`}
+              onClick={handleToggleSubscription}
+            >
+              {profile.isSubscribed ? 'Subscribed' : 'Subscribe'}
+            </button>
+          ) : (
+            <button className="sub-btn edit-btn">Edit Profile</button>
+          )}
         </div>
       </div>
 
