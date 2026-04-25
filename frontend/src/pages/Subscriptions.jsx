@@ -60,11 +60,11 @@ const Subscriptions = () => {
         ) : (
           channels.map((sub) => (
             <div key={sub._id} className="channel-card glass">
-              <Link to={`/profile/${sub.subscribedChannel.username}`} className="channel-link">
-                <img src={sub.subscribedChannel.avatar} alt={sub.subscribedChannel.username} className="channel-avatar-lg" />
+              <Link to={`/profile/${sub.channel.username}`} className="channel-link">
+                <img src={sub.channel.avatar} alt={sub.channel.username} className="channel-avatar-lg" />
                 <div className="channel-info">
                   <h3 className="channel-name">
-                    {sub.subscribedChannel.username} <CheckCircle size={16} className="verified-icon" />
+                    {sub.channel.username} <CheckCircle size={16} className="verified-icon" />
                   </h3>
                   <p className="channel-meta">1.2M Subscribers</p>
                 </div>
