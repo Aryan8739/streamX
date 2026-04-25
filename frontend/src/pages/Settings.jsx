@@ -94,9 +94,6 @@ const Settings = () => {
   return (
     <div className="settings-container">
       <div className="page-header">
-        <div className="header-icon">
-          <SettingsIcon size={32} />
-        </div>
         <div>
           <h1 className="page-title">Settings</h1>
           <p className="page-subtitle">Manage your account and preferences</p>

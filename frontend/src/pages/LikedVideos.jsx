@@ -36,9 +36,6 @@ const LikedVideos = () => {
   return (
     <div className="liked-videos-container">
       <div className="page-header">
-        <div className="header-icon">
-          <ThumbsUp size={32} />
-        </div>
         <div>
           <h1 className="page-title">Liked Videos</h1>
           <p className="page-subtitle">{videos.length} videos</p>

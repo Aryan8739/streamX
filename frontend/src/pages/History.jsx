@@ -50,9 +50,6 @@ const History = () => {
     <div className="history-container">
       <div className="page-header justify-between">
         <div className="header-left">
-          <div className="header-icon">
-            <HistoryIcon size={32} />
-          </div>
           <div>
             <h1 className="page-title">Watch History</h1>
             <p className="page-subtitle">{videos.length} videos stored</p>

@@ -65,9 +65,6 @@ const Dashboard = () => {
   return (
     <div className="dashboard-container">
       <div className="page-header">
-        <div className="header-icon">
-          <BarChart3 size={32} />
-        </div>
         <div>
           <h1 className="page-title">Channel Dashboard</h1>
           <p className="page-subtitle">Overview of your channel's performance</p>

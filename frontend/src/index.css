@@ -157,6 +157,33 @@ a {
   gap: 2rem 1.25rem;
 }
 
+/* Page Header & Icons */
+.header-icon {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  color: var(--text);
+  transition: var(--transition);
+}
+
+.header-icon:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 2.5rem;
+}
+
 /* Skeleton Profile Specifics */
 .skeleton-profile .profile-info-bar {
   margin-top: -60px;
