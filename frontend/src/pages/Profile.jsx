@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import VideoCard from '../components/VideoCard';
 import TweetCard from '../components/TweetCard';
 import { Send } from 'lucide-react';
+import Skeleton from '../components/Skeleton';
 import './Profile.css';
 
 const Profile = () => {
@@ -78,7 +79,7 @@ const Profile = () => {
     }
   };
 
-  if (loading) return <div className="loading">Loading Profile...</div>;
+  if (loading) return <Skeleton type="channel" />;
   if (!profile) return <div className="error">User not found</div>;
 
   return (

@@ -156,3 +156,22 @@ a {
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 2rem 1.25rem;
 }
+
+/* Skeleton Profile Specifics */
+.skeleton-profile .profile-info-bar {
+  margin-top: -60px;
+}
+
+.skeleton-profile .tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1rem;
+}
+
+.skeleton-profile .video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem 1.25rem;
+}
