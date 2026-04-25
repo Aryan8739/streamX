@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import { ApiError } from "./utils/ApiError.js";
+
 
 
 const app = express();
@@ -45,7 +47,31 @@ app.use("/api/v1/playlists", playlistRouter)
 app.use("/api/v1/comments", commentRouter)
 app.use("/api/v1/dashboard", dashboardRouter)
 
-//https://localhost:8000/api/v1/users/register
+// Error Handler
 
+app.use((err, req, res, next) => {
+    console.error("Error Details:", {
+        message: err.message,
+        statusCode: err.statusCode,
+        stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+    });
+
+    if (err instanceof ApiError) {
+        return res.status(err.statusCode).json({
+            success: false,
+            message: err.message,
+            errors: err.errors,
+            data: err.data
+        });
+    }
+
+    // Default error
+    return res.status(500).json({
+        success: false,
+        message: "Something went wrong on the server",
+        errors: [],
+        data: null
+    });
+});
 
 export { app }
