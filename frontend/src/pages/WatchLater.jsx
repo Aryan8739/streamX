@@ -29,6 +29,9 @@ const WatchLater = () => {
   return (
     <div className="liked-videos-container">
       <div className="page-header">
+        <div className="header-icon">
+          <Clock size={22} />
+        </div>
         <div>
           <h1 className="page-title">Watch Later</h1>
           <p className="page-subtitle">{loading ? '...' : videos.length} videos bookmarked</p>

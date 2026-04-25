@@ -40,6 +40,9 @@ const Subscriptions = () => {
   return (
     <div className="subscriptions-container">
       <div className="page-header">
+        <div className="header-icon">
+          <Users size={22} />
+        </div>
         <div>
           <h1 className="page-title">Subscriptions</h1>
           <p className="page-subtitle">{loading ? '...' : channels.length} channels</p>

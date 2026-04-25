@@ -60,6 +60,9 @@ const Community = () => {
   return (
     <div className="community-container">
       <div className="page-header">
+         <div className="header-icon">
+            <Users size={22} />
+         </div>
          <div>
             <h1 className="page-title">Community</h1>
             <p className="page-subtitle">Share updates and connect with your audience</p>
