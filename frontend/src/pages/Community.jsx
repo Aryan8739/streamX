@@ -16,9 +16,7 @@ const Community = () => {
   const fetchAllTweets = async () => {
     try {
       setLoading(true);
-      // For now fetching user specific ones. 
-      // If backend has a /tweets/all or /tweets/feed, use that.
-      const response = await apiClient.get(`/tweets/user/${user?._id}`); 
+      const response = await apiClient.get('/tweets/'); 
       setTweets(response.data || []);
     } catch (err) {
       console.error('Failed to fetch tweets', err);

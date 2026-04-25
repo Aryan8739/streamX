@@ -7,8 +7,8 @@ import './TweetCard.css';
 const TweetCard = ({ tweet, isOwner, onDelete, onUpdate }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(tweet.content);
-  const [isLiked, setIsLiked] = useState(false); // Backend should ideally provide this
-  const [likesCount, setLikesCount] = useState(0); // Backend should ideally provide this
+  const [isLiked, setIsLiked] = useState(tweet.isLiked || false);
+  const [likesCount, setLikesCount] = useState(tweet.likesCount || 0);
   const [loading, setLoading] = useState(false);
 
   // Handle both owner patterns from different endpoints
