@@ -4,6 +4,8 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import compression from 'compression';
 import { rateLimit } from 'express-rate-limit';
+import morgan from 'morgan';
+import path from 'path';
 import { ApiError } from "./utils/ApiError.js";
 
 
@@ -32,11 +34,13 @@ const limiter = rateLimit({
 
 app.use("/api/", limiter); // Apply rate limiting to all API routes
 
+// Request Logging
+app.use(morgan('dev'));
 
-app.use((req, res, next) => {
+/*app.use((req, res, next) => {
     console.log("Incoming request:", req.method, req.url);
     next();
-});
+});*/
 
 
 
@@ -94,5 +98,15 @@ app.use((err, req, res, next) => {
         data: null
     });
 });
+
+// Serving Frontend in Production
+const __dirname = path.resolve();
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, '../frontend', 'dist', 'index.html'));
+    });
+}
 
 export { app }

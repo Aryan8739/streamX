@@ -17,6 +17,7 @@ const videoSchema = new Schema(
         title:{
             type: String , 
             required: true, 
+            index: true
         },
         description:{
             type: String , 
@@ -37,6 +38,7 @@ const videoSchema = new Schema(
         owner:{
             type: Schema.Types.ObjectId,
             ref: "User",
+            index: true
         }
         
 

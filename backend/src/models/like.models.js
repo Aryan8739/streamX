@@ -5,7 +5,8 @@ import mongoose, {Schema} from "mongoose";
 const likeSchema = new Schema({
     video: {
         type: Schema.Types.ObjectId,
-        ref: "Video"
+        ref: "Video",
+        index: true
     },
     comment: {
         type: Schema.Types.ObjectId,
@@ -17,7 +18,8 @@ const likeSchema = new Schema({
     },
     likedBy: {
         type: Schema.Types.ObjectId,
-        ref: "User"
+        ref: "User",
+        index: true
     },
     
 }, {timestamps: true})
