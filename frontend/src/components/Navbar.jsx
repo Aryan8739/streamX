@@ -31,16 +31,19 @@ const Navbar = () => {
         </Link>
       </div>
 
-      <form className="nav-center search-bar" onSubmit={handleSearch}>
-        <input 
-          type="text" 
-          placeholder="Search videos..." 
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        <button type="submit" className="search-btn">
-          <Search size={18} />
-        </button>
+      <form className="nav-center search-bar-container" onSubmit={handleSearch}>
+        <div className="search-input-wrapper">
+          <Search size={18} className="search-icon-left" />
+          <input 
+            type="text" 
+            placeholder="Search videos, creators..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <div className="search-shortcut">
+            <span>/</span>
+          </div>
+        </div>
       </form>
 
       <div className="nav-right">

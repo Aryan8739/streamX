@@ -7,6 +7,7 @@
   --text: #ffffff;
   --text-muted: #8b8b93;
   --accent: #ffffff; /* Minimal: white accent */
+  --accent-rgb: 255, 255, 255;
   --accent-hover: #e4e4e7;
   --accent-secondary: #06b6d4;
   
