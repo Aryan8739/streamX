@@ -60,7 +60,14 @@ const Navbar = () => {
               <Link to={`/profile/${user.username}`}>
                 <img src={user.avatar} alt={user.username} className="avatar-sm" />
               </Link>
-              <button onClick={logout} className="logout-btn" title="Logout">
+              <button 
+                onClick={async () => {
+                  await logout();
+                  navigate('/');
+                }} 
+                className="logout-btn" 
+                title="Logout"
+              >
                 <LogOut size={18} />
               </button>
             </div>

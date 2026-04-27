@@ -33,6 +33,7 @@ const VideoDetail = () => {
         setLikesCount(videoRes.data.likesCount || 0);
         setIsLiked(videoRes.data.isLiked || false);
         setIsWatchLater(videoRes.data.isWatchLater || false);
+        setSubscribed(videoRes.data.owner?.isSubscribed || false);
 
         // Fetch related videos (using same category or just random for now)
         const relatedRes = await apiClient.get('/videos?limit=10');
@@ -81,9 +82,19 @@ const VideoDetail = () => {
   const toggleSubscribe = async () => {
     if (!user) return toast.info('Please login to subscribe');
     try {
-      await apiClient.post(`/subscriptions/c/${video.owner._id}`);
-      setSubscribed(!subscribed);
-      toast.success(subscribed ? 'Unsubscribed' : 'Subscribed!');
+      const res = await apiClient.post(`/subscriptions/c/${video.owner._id}`);
+      const isNowSubscribed = res.data.isSubscribed;
+      
+      setSubscribed(isNowSubscribed);
+      setVideo(prev => ({
+        ...prev,
+        owner: {
+          ...prev.owner,
+          subscribersCount: isNowSubscribed ? (prev.owner.subscribersCount + 1) : (prev.owner.subscribersCount - 1)
+        }
+      }));
+      
+      toast.success(isNowSubscribed ? 'Subscribed!' : 'Unsubscribed');
     } catch (err) {
       toast.error('Could not update subscription');
     }
@@ -136,7 +147,7 @@ const VideoDetail = () => {
               <Link to={`/profile/${video.owner.username}`} className="channel-name">
                 {video.owner.username} <CheckCircle size={14} className="verified-icon" />
               </Link>
-              <span className="sub-count">1.2M subscribers</span>
+              <span className="sub-count">{video.owner.subscribersCount || 0} subscribers</span>
             </div>
             <button
               className={`sub-btn ${subscribed ? 'subscribed' : ''}`}
