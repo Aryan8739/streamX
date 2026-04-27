@@ -38,4 +38,17 @@ export const verifyJWT = asyncHandler(async (req,res,next) => {
   
    }
 
-})
+export const verifyJWT_optional = asyncHandler(async (req, res, next) => {
+  try {
+    const token = req.cookies?.accessToken || req.header("Authorization")?.replace(/^Bearer\s+/, "");
+    if (!token) return next();
+
+    const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    const user = await User.findById(decodedToken?._id).select("-password -refreshToken");
+    if (user) req.user = user;
+    next();
+  } catch (error) {
+    // If token is invalid, just proceed as guest
+    next();
+  }
+});
