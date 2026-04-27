@@ -38,7 +38,7 @@ function AppContent() {
   const showSidebar = user && !noSidebarPaths.includes(location.pathname) && sidebarOpen;
 
   if (loading) {
-    return <div className="loading-screen">Loading Stream...</div>;
+    return <div className="loading-screen">Loading streamX...</div>;
   }
 
   return (

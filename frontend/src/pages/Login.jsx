@@ -32,7 +32,7 @@ const Login = () => {
     <div className="auth-container">
       <div className="auth-card glass">
         <h2 className="auth-title">Welcome Back</h2>
-        <p className="auth-subtitle">Login to your Stream account</p>
+        <p className="auth-subtitle">Login to your streamX account</p>
         
         {error && <div className="auth-error">{error}</div>}
         

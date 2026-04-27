@@ -47,7 +47,7 @@ const Signup = () => {
     <div className="auth-container">
       <div className="auth-card glass">
         <h2 className="auth-title">Create Account</h2>
-        <p className="auth-subtitle">Join the Stream community today</p>
+        <p className="auth-subtitle">Join the streamX community today</p>
         
         {error && <div className="auth-error">{error}</div>}
         

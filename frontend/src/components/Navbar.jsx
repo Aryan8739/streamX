@@ -27,7 +27,7 @@ const Navbar = () => {
           </button>
         )}
         <Link to="/" className="logo">
-          <span className="accent-text">Stream</span>
+          <span className="accent-text">streamX</span>
         </Link>
       </div>
 

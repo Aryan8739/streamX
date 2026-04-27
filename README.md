@@ -1,8 +1,8 @@
-# Stream: A Modern Video-Sharing Platform
+# streamX: A Modern Video-Sharing Platform
 
-Stream is a full-stack video-sharing application built with the MERN stack. It features a robust backend for managing videos, users, and social interactions, combined with a sleek, modern frontend designed for a premium user experience.
+streamX is a full-stack video-sharing application built with the MERN stack. It features a robust backend for managing videos, users, and social interactions, combined with a sleek, modern frontend designed for a premium user experience.
 
-![Stream Header](https://via.placeholder.com/1200x400?text=Stream+Video+Platform)
+![streamX Header](https://via.placeholder.com/1200x400?text=streamX+Video+Platform)
 
 ## 🚀 Features
 
