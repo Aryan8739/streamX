@@ -6,49 +6,50 @@ import './Landing.css';
 const Landing = () => {
   return (
     <div className="landing-page">
-      <div className="hero-section">
+      <header className="hero-section">
         <div className="hero-content">
           <div className="badge">Next Generation Streaming</div>
           <h1 className="hero-title">
-            The future of <span className="gradient-text">video content</span> is here.
+            Stream <span className="gradient-text">everything</span>, <br /> 
+            anywhere.
           </h1>
           <p className="hero-description">
-            Experience a minimalist, high-performance video platform designed for creators and viewers who demand more. No clutter, just content.
+            Experience streamX—the minimalist, high-performance video platform designed for the modern creator. No clutter, just pure content.
           </p>
           <div className="hero-actions">
-            <Link to="/signup" className="btn-primary-lg">Start Creating</Link>
+            <Link to="/signup" className="btn-primary-lg">Get Started</Link>
             <Link to="/login" className="btn-secondary-lg">Sign In</Link>
           </div>
         </div>
         
         <div className="hero-visual">
-          <div className="visual-container glass">
-             <img src="/Users/aryanrastogi/.gemini/antigravity/brain/fd4887ed-a40f-4f0b-ab91-06ece50f100e/landing_hero_preview_1776611541731.png" alt="Platform Preview" />
-             <div className="floating-card glass">
-               <Zap size={20} className="accent-text" />
-               <span>Lightning Fast</span>
+          <div className="visual-container">
+             <img src="/Users/aryanrastogi/.gemini/antigravity/brain/97776799-c7ea-4a4e-b746-c3ee10d79b24/streamx_hero_preview_1777310074885.png" alt="streamX Interface Preview" />
+             <div className="floating-card">
+               <Zap size={18} />
+               <span>Ultra Low Latency</span>
              </div>
           </div>
         </div>
-      </div>
+      </header>
 
-      <div className="features-grid">
-        <div className="feature-card glass">
+      <section className="features-grid">
+        <div className="feature-card">
           <div className="feature-icon"><Play size={24} /></div>
-          <h3>HD Streaming</h3>
-          <p>Buttery smooth playback across all your devices with adaptive bitrate.</p>
+          <h3>Seamless Playback</h3>
+          <p>Adaptive bitrate streaming ensuring HD quality even on low-speed connections.</p>
         </div>
-        <div className="feature-card glass">
+        <div className="feature-card">
           <div className="feature-icon"><Users size={24} /></div>
-          <h3>Community</h3>
-          <p>Build your audience with powerful engagement tools and analytics.</p>
+          <h3>Creator First</h3>
+          <p>Advanced analytics and engagement tools built to help you grow your audience.</p>
         </div>
-        <div className="feature-card glass">
+        <div className="feature-card">
           <div className="feature-icon"><Shield size={24} /></div>
-          <h3>Secure & Private</h3>
-          <p>Your data and content are protected by industry-leading security.</p>
+          <h3>Secure by Design</h3>
+          <p>End-to-end security for your content and data, powered by industry-standard protocols.</p>
         </div>
-      </div>
+      </section>
     </div>
   );
 };
