@@ -17,7 +17,7 @@ import {
   sendOTP
 } from "../controllers/users.controllers.js";
 import { upload } from "../middlewares/multer.middlewares.js";
-import { verifyJWT } from "../middlewares/auth.middleware.js";
+import { verifyJWT, verifyJWT_optional } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
