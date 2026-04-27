@@ -124,6 +124,37 @@
   margin-top: 0.25rem;
 }
 
+.otp-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.resend-timer {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.resend-timer span {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.resend-btn {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: var(--transition);
+}
+
+.resend-btn:hover {
+  text-decoration: underline;
+}
+
 .text-btn {
   background: none;
   border: none;

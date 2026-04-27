@@ -17,19 +17,31 @@ const Signup = () => {
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1); // 1: Details, 2: OTP
   const [otp, setOtp] = useState('');
+  const [timer, setTimer] = useState(0);
   
   const { register, sendOTP } = useAuth();
   const toast = useToast();
   const navigate = useNavigate();
 
+  React.useEffect(() => {
+    let interval;
+    if (timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [timer]);
+
   const handleSendOTP = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     setError('');
     setLoading(true);
     try {
       await sendOTP(formData.email);
       toast.success('OTP sent to your email');
       setStep(2);
+      setTimer(60); // Reset 60s timer
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to send OTP');
       toast.error(err.response?.data?.message || 'Failed to send OTP');
@@ -151,7 +163,10 @@ const Signup = () => {
                 required 
                 maxLength="6"
                 value={otp}
-                onChange={(e) => setOtp(e.target.value)}
+                onChange={(e) => {
+                  setOtp(e.target.value);
+                  setError('');
+                }}
                 placeholder="000000"
                 className="otp-input"
               />
@@ -162,6 +177,21 @@ const Signup = () => {
               {loading ? 'Verifying...' : 'Complete Registration'}
             </button>
             
+            <div className="otp-actions">
+              {timer > 0 ? (
+                <p className="resend-timer">Resend OTP in <span>{timer}s</span></p>
+              ) : (
+                <button 
+                  type="button" 
+                  className="resend-btn" 
+                  onClick={() => handleSendOTP(null)}
+                  disabled={loading}
+                >
+                  Resend OTP
+                </button>
+              )}
+            </div>
+
             <button 
               type="button" 
               className="text-btn" 
