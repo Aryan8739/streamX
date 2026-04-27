@@ -35,7 +35,6 @@
     "morgan": "^1.10.1",
     "multer": "^2.0.2",
     "nodemailer": "^8.0.7",
-    "otp-generator": "^4.0.1",
-    "resend": "^6.12.2"
+    "otp-generator": "^4.0.1"
   }
 }

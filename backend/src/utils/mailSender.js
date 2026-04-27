@@ -1,26 +1,28 @@
-import { Resend } from 'resend';
-
-const resend = new Resend(process.env.RESEND_API_KEY);
+import nodemailer from 'nodemailer';
+import { ApiError } from './ApiError.js';
 
 const mailSender = async (email, title, body) => {
     try {
-        const { data, error } = await resend.emails.send({
-            from: 'streamX <onboarding@resend.dev>', // Change to your verified domain in production
-            to: [email],
-            subject: title,
-            html: body,
+        let transporter = nodemailer.createTransport({
+            host: process.env.MAIL_HOST,
+            auth: {
+                user: process.env.MAIL_USER,
+                pass: process.env.MAIL_PASS,
+            }
         });
 
-        if (error) {
-            console.error("Resend Error:", error);
-            return null;
-        }
+        let info = await transporter.sendMail({
+            from: `"streamX" <${process.env.MAIL_USER}>`,
+            to: `${email}`,
+            subject: `${title}`,
+            html: `${body}`,
+        });
 
-        console.log("Email sent successfully:", data);
-        return data;
+        console.log("Email info: ", info);
+        return info;
     } catch (error) {
-        console.error("Mail Sender Error:", error.message);
-        return null;
+        console.log("Error occurred while sending mail: ", error.message);
+        throw new ApiError(500, "Error occurred while sending mail");
     }
 };
 

@@ -618,7 +618,7 @@ const getWatchLater = asyncHandler(async (req, res) => {
 
 const toggleWatchLater = asyncHandler(async (req, res) => {
   const { videoId } = req.params
-  
+
   const user = await User.findById(req.user._id)
   const index = user.watchLater.indexOf(videoId)
 
