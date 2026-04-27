@@ -2,7 +2,7 @@
 
 streamX is a full-stack video-sharing application built with the MERN stack. It features a robust backend for managing videos, users, and social interactions, combined with a sleek, modern frontend designed for a premium user experience.
 
-![streamX Header](https://via.placeholder.com/1200x400?text=streamX+Video+Platform)
+![streamX Logo](./public/streamx_logo.png)
 
 ## 🚀 Features
 
