@@ -131,7 +131,7 @@ const Profile = () => {
               {profile.isSubscribed ? 'Subscribed' : 'Subscribe'}
             </button>
           ) : (
-            <button className="sub-btn edit-btn">Edit Profile</button>
+            <Link to="/settings" className="sub-btn edit-btn">Edit Profile</Link>
           )}
         </div>
       </div>

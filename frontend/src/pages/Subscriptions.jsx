@@ -12,30 +12,50 @@ const Subscriptions = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchSubscriptions = async () => {
-      if (!user) return;
-      try {
-        setLoading(true);
-        // The backend route for subscribed channels is /subscriptions/c/:channelId
-        // Wait, looking at the backend routes again, getSubscribedChannels takes channelId.
-        // Usually we want the channels the CURRENT user is subscribed to.
-        // Let's try the endpoint that makes most sense for "my subscriptions"
-        const response = await apiClient.get(`/subscriptions/c/${user._id}`);
-        setChannels(response.data || []);
-      } catch (err) {
-        setError(err.message || 'Failed to fetch subscriptions');
-      } finally {
-        setLoading(false);
-      }
-    };
+  const handleToggleSubscription = async (channelId) => {
+    try {
+      const res = await apiClient.post(`/subscriptions/c/${channelId}`);
+      // Update local state: toggle 'isSubscribed' property if it exists, 
+      // or just filter out if we want them to disappear, 
+      // but user asked for it to 'work like profile' which implies toggling.
+      setChannels(prev => prev.map(sub => {
+        if (sub.channel._id === channelId) {
+          return {
+            ...sub,
+            isSubscribed: res.data.isSubscribed,
+            channel: {
+              ...sub.channel,
+              subscribersCount: res.data.isSubscribed ? (sub.channel.subscribersCount + 1) : (sub.channel.subscribersCount - 1)
+            }
+          };
+        }
+        return sub;
+      }));
+    } catch (err) {
+      console.error('Failed to toggle subscription', err);
+    }
+  };
 
+  const fetchSubscriptions = async () => {
+    if (!user) return;
+    try {
+      setLoading(true);
+      const response = await apiClient.get(`/subscriptions/c/${user._id}`);
+      // Add 'isSubscribed: true' to all initially fetched channels
+      const initialChannels = (response.data || []).map(sub => ({ ...sub, isSubscribed: true }));
+      setChannels(initialChannels);
+    } catch (err) {
+      setError(err.message || 'Failed to fetch subscriptions');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchSubscriptions();
   }, [user]);
 
   if (!user) return <div className="auth-prompt">Please login to view your subscriptions.</div>;
-
-
 
   return (
     <div className="subscriptions-container">
@@ -69,7 +89,12 @@ const Subscriptions = () => {
                   <p className="channel-meta">{sub.channel.subscribersCount || 0} Subscribers</p>
                 </div>
               </Link>
-              <button className="subscribed-btn">Subscribed</button>
+              <button 
+                className={`sub-btn ${sub.isSubscribed ? 'subscribed' : ''}`}
+                onClick={() => handleToggleSubscription(sub.channel._id)}
+              >
+                {sub.isSubscribed ? 'Subscribed' : 'Subscribe'}
+              </button>
             </div>
           ))
         )}
