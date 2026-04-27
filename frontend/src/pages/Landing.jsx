@@ -24,7 +24,7 @@ const Landing = () => {
         
         <div className="hero-visual">
           <div className="visual-container">
-             <img src="/Users/aryanrastogi/.gemini/antigravity/brain/97776799-c7ea-4a4e-b746-c3ee10d79b24/streamx_hero_preview_1777310074885.png" alt="streamX Interface Preview" />
+             <img src="/interface_preview.png" alt="streamX Interface Preview" />
              <div className="floating-card">
                <Zap size={18} />
                <span>Ultra Low Latency</span>
