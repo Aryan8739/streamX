@@ -1,20 +1,27 @@
 import { Router } from "express";
-import {registerUser  } from "../controllers/users.controllers.js";
-import {loginUser  } from "../controllers/users.controllers.js";
-import {upload} from "../middlewares/multer.middlewares.js";
-import { logoutUser } from "../controllers/users.controllers.js";
+import {
+  registerUser,
+  loginUser,
+  logoutUser,
+  refreshAccessToken,
+  changeCurrentPassword,
+  getCurrentUser,
+  updateAccountDetails,
+  updateUserAvatar,
+  updateUserCoverImage,
+  getUserChannelProfile,
+  getWatchHistory,
+  clearWatchHistory,
+  getWatchLater,
+  toggleWatchLater,
+  sendOTP
+} from "../controllers/users.controllers.js";
+import { upload } from "../middlewares/multer.middlewares.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
-import {refreshAccessToken } from "../controllers/users.controllers.js";
-import {changeCurrentPassword  } from "../controllers/users.controllers.js";
-import {getCurrentUser } from "../controllers/users.controllers.js";
-import {updateAccountDetails } from "../controllers/users.controllers.js";
-import {updateUserAvatar } from "../controllers/users.controllers.js";
-import {updateUserCoverImage } from "../controllers/users.controllers.js";
-import { getUserChannelProfile, getWatchHistory, clearWatchHistory, getWatchLater, toggleWatchLater } from "../controllers/users.controllers.js";
 
+const router = Router();
 
-const router = Router()
-
+router.route("/send-otp").post(sendOTP);
 
 router.route("/register").post(
   upload.fields([
@@ -22,7 +29,7 @@ router.route("/register").post(
     { name: "coverImage", maxCount: 1 }
   ]),
   registerUser
-)
+);
 
 router.route("/login").post(loginUser)
 

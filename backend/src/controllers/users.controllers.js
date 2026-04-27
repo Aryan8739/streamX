@@ -6,6 +6,8 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import fs from "fs";
 import jwt from "jsonwebtoken";
+import otpGenerator from "otp-generator";
+import { OTP } from "../models/otp.models.js";
 
 
 
@@ -31,10 +33,58 @@ const generateAccessAndRefreshTokens = async (userId) => {
 
   }
 }
+
+const sendOTP = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    throw new ApiError(400, "Email is required");
+  }
+
+  // Check if user already exists
+  const existedUser = await User.findOne({ email });
+  if (existedUser) {
+    throw new ApiError(409, "User with this email already exists");
+  }
+
+  // Generate OTP
+  let otp = otpGenerator.generate(6, {
+    upperCaseAlphabets: false,
+    lowerCaseAlphabets: false,
+    specialChars: false,
+  });
+
+  // Check uniqueness of OTP (optional but good)
+  let result = await OTP.findOne({ otp: otp });
+  while (result) {
+    otp = otpGenerator.generate(6, {
+      upperCaseAlphabets: false,
+    });
+    result = await OTP.findOne({ otp: otp });
+  }
+
+  const otpPayload = { email, otp };
+  const otpBody = await OTP.create(otpPayload);
+
+  return res.status(200).json(
+    new ApiResponse(200, { email }, "OTP sent successfully")
+  );
+});
+
 const registerUser = asyncHandler(async (req, res) => {
 
-  const { fullName, email, username, password } = req.body || {};
+  const { fullName, email, username, password, otp } = req.body || {};
   console.log("email:", email);
+
+  if (!otp) {
+    throw new ApiError(400, "OTP is required");
+  }
+
+  // Verify OTP
+  const response = await OTP.find({ email }).sort({ createdAt: -1 }).limit(1);
+  if (response.length === 0 || otp !== response[0].otp) {
+    throw new ApiError(400, "Invalid OTP");
+  }
 
   // Validation (Move file paths up for cleanup)
   const avatarLocalPath = req.files?.avatar?.[0]?.path;
@@ -570,6 +620,7 @@ const toggleWatchLater = asyncHandler(async (req, res) => {
 
 export {
   registerUser,
+  sendOTP,
   loginUser,
   logoutUser,
   refreshAccessToken,
