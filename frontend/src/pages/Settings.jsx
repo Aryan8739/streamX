@@ -154,12 +154,12 @@ const Settings = () => {
                     />
                   </div>
                   <div className="form-group">
-                    <label>Email Address</label>
+                    <label>Email Address (Cannot be changed)</label>
                     <input 
                       type="email" 
                       value={profileData.email}
-                      onChange={(e) => setProfileData({...profileData, email: e.target.value})}
-                      required
+                      disabled
+                      readOnly
                     />
                   </div>
                   <button type="submit" className="btn-primary" disabled={loading}>

@@ -15,17 +15,16 @@ const Subscriptions = () => {
   const handleToggleSubscription = async (channelId) => {
     try {
       const res = await apiClient.post(`/subscriptions/c/${channelId}`);
-      // Update local state: toggle 'isSubscribed' property if it exists, 
-      // or just filter out if we want them to disappear, 
-      // but user asked for it to 'work like profile' which implies toggling.
+      const isNowSubscribed = res.data.isSubscribed;
+      
       setChannels(prev => prev.map(sub => {
         if (sub.channel._id === channelId) {
           return {
             ...sub,
-            isSubscribed: res.data.isSubscribed,
+            isSubscribed: isNowSubscribed,
             channel: {
               ...sub.channel,
-              subscribersCount: res.data.isSubscribed ? (sub.channel.subscribersCount + 1) : (sub.channel.subscribersCount - 1)
+              subscribersCount: isNowSubscribed ? (sub.channel.subscribersCount + 1) : (sub.channel.subscribersCount - 1)
             }
           };
         }
@@ -100,7 +99,7 @@ const Subscriptions = () => {
         )}
       </div>
 
-      {channels.length === 0 && (
+      {channels.length === 0 && !loading && (
         <div className="empty-state">
           <Users size={64} className="text-muted" />
           <h2>You haven't subscribed to any channels yet</h2>
