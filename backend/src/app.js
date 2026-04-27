@@ -12,6 +12,8 @@ import { ApiError } from "./utils/ApiError.js";
 
 const app = express();
 
+console.log("CORS_ORIGIN configured for:", process.env.CORS_ORIGIN);
+
 app.use(cors({
     origin: process.env.CORS_ORIGIN,
     credentials: true
