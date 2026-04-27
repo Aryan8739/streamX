@@ -110,6 +110,34 @@
   text-decoration: underline;
 }
 
+.otp-input {
+  text-align: center;
+  font-size: 1.5rem !important;
+  letter-spacing: 0.5rem;
+  font-weight: 700;
+}
+
+.otp-help {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 0.25rem;
+}
+
+.text-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: var(--transition);
+}
+
+.text-btn:hover {
+  color: var(--text);
+}
+
 @media (max-width: 640px) {
   .input-row {
     grid-template-columns: 1fr;

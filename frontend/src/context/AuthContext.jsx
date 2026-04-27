@@ -40,8 +40,13 @@ export const AuthProvider = ({ children }) => {
     return response.data;
   };
 
+  const sendOTP = async (email) => {
+    const response = await apiClient.post('/users/send-otp', { email });
+    return response.data;
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, register, setUser }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, register, sendOTP, setUser }}>
       {children}
     </AuthContext.Provider>
   );
