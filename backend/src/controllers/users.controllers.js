@@ -47,6 +47,12 @@ const sendOTP = asyncHandler(async (req, res) => {
     throw new ApiError(409, "User with this email already exists");
   }
 
+  // Cap on resends (e.g., max 3 OTPs per email in the 5-min window)
+  const otpCount = await OTP.countDocuments({ email });
+  if (otpCount >= 3) {
+    throw new ApiError(429, "Too many OTP requests. Please wait a few minutes before trying again.");
+  }
+
   // Generate OTP
   let otp = otpGenerator.generate(6, {
     upperCaseAlphabets: false,
@@ -83,6 +89,10 @@ const registerUser = asyncHandler(async (req, res) => {
   // Verify OTP
   const response = await OTP.find({ email }).sort({ createdAt: -1 }).limit(1);
   if (response.length === 0 || otp !== response[0].otp) {
+    const avatarLocalPath = req.files?.avatar?.[0]?.path;
+    const coverImageLocalPath = req.files?.coverImage?.[0]?.path;
+    if (avatarLocalPath) fs.unlinkSync(avatarLocalPath);
+    if (coverImageLocalPath) fs.unlinkSync(coverImageLocalPath);
     throw new ApiError(400, "Invalid OTP");
   }
 
