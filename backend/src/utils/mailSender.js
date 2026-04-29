@@ -26,8 +26,8 @@ const mailSender = async (email, title, body) => {
         console.log("Email info: ", info);
         return info;
     } catch (error) {
-        console.log("Error occurred while sending mail: ", error.message);
-        throw new ApiError(500, "Error occurred while sending mail");
+        console.log("Error occurred while sending mail: ", error);
+        throw new ApiError(500, "Mail Error: " + error.message);
     }
 };
 
