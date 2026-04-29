@@ -13,7 +13,7 @@ const CommentSection = ({ videoId }) => {
 
   const fetchComments = async () => {
     try {
-      const response = await apiClient.get(`/comments/v/${videoId}`);
+      const response = await apiClient.get(`/comments/${videoId}`);
       setComments(response.data.docs || []);
     } catch (err) {
       console.error('Failed to fetch comments', err);
@@ -30,7 +30,7 @@ const CommentSection = ({ videoId }) => {
 
     setLoading(true);
     try {
-      await apiClient.post(`/comments/v/${videoId}`, { content: newComment });
+      await apiClient.post(`/comments/${videoId}`, { content: newComment });
       setNewComment('');
       fetchComments();
     } catch (err) {
