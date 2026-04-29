@@ -4,16 +4,14 @@ import { ApiError } from './ApiError.js';
 const mailSender = async (email, title, body) => {
     try {
         let transporter = nodemailer.createTransport({
-            host: process.env.MAIL_HOST,
-            port: 465,
-            secure: true,
+            service: 'gmail',
             auth: {
+                type: 'OAuth2',
                 user: process.env.MAIL_USER,
-                pass: process.env.MAIL_PASS,
-            },
-            connectionTimeout: 10000, // 10 seconds
-            greetingTimeout: 10000,
-            socketTimeout: 10000
+                clientId: process.env.GOOGLE_CLIENT_ID,
+                clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+                refreshToken: process.env.GOOGLE_REFRESH_TOKEN
+            }
         });
 
         let info = await transporter.sendMail({
