@@ -8,9 +8,13 @@ const apiClient = axios.create({
   },
 });
 
-// Request interceptor for debugging
+// Request interceptor for debugging and auth
 apiClient.interceptors.request.use((config) => {
   console.log(`🚀 API Request: ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`);
+  const token = localStorage.getItem('accessToken');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
   return config;
 });
 

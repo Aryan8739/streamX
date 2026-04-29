@@ -25,12 +25,21 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     const response = await apiClient.post('/users/login', credentials);
     setUser(response.data.user);
+    if (response.data.accessToken) {
+      localStorage.setItem('accessToken', response.data.accessToken);
+    }
     return response.data;
   };
 
   const logout = async () => {
-    await apiClient.post('/users/logout');
-    setUser(null);
+    try {
+      await apiClient.post('/users/logout');
+    } catch (error) {
+      console.error("Logout API failed", error);
+    } finally {
+      setUser(null);
+      localStorage.removeItem('accessToken');
+    }
   };
 
   const register = async (formData) => {
