@@ -101,14 +101,28 @@ app.use((err, req, res, next) => {
     });
 });
 
-// Serving Frontend in Production
-const __dirname = path.resolve();
-if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '../frontend/dist')));
-
-    app.get('*all', (req, res) => {
-        res.sendFile(path.resolve(__dirname, '../frontend', 'dist', 'index.html'));
-    });
-}
+// Default Route
+app.get('/', (req, res) => {
+    res.send(`
+        <html>
+            <head>
+                <title>StreamX Backend API</title>
+                <style>
+                    body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #121212; color: #ffffff; }
+                    .container { text-align: center; padding: 2rem; background-color: #1e1e1e; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+                    h1 { color: #bb86fc; }
+                    p { color: #cccccc; }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>StreamX API is Running 🚀</h1>
+                    <p>The backend server is active and listening for requests.</p>
+                    <p>Frontend is hosted separately on Vercel at https://streamxvid.vercel.app</p>
+                </div>
+            </body>
+        </html>
+    `);
+});
 
 export { app }
