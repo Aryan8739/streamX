@@ -131,3 +131,7 @@ This project is licensed under the ISC License.
 
 **Developed by [Aryan](https://github.com/Aryan8739)**
 Live Demo: https://streamxvid.vercel.app/
+
+**CI/CD pipeline**
+![Backend CI](https://github.com/Aryan8739/streamX/actions/workflows/backend.yml/badge.svg)
+![Frontend CI](https://github.com/Aryan8739/streamX/actions/workflows/frontend.yml/badge.svg)
