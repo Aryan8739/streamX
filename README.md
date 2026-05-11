@@ -1,3 +1,5 @@
+![Backend CI](https://github.com/Aryan8739/streamX/actions/workflows/backend.yml/badge.svg)
+![Frontend CI](https://github.com/Aryan8739/streamX/actions/workflows/frontend.yml/badge.svg)
 # streamX: A Modern Video-Sharing Platform
 
 streamX is a full-stack video-sharing application built with the MERN stack. It features a robust backend for managing videos, users, and social interactions, combined with a sleek, modern frontend designed for a premium user experience.
@@ -132,6 +134,3 @@ This project is licensed under the ISC License.
 **Developed by [Aryan](https://github.com/Aryan8739)**
 Live Demo: https://streamxvid.vercel.app/
 
-**CI/CD pipeline**
-![Backend CI](https://github.com/Aryan8739/streamX/actions/workflows/backend.yml/badge.svg)
-![Frontend CI](https://github.com/Aryan8739/streamX/actions/workflows/frontend.yml/badge.svg)
