@@ -124,7 +124,8 @@ jobs:
       - name: Audit for vulnerabilities
         # Fail on high or critical vulnerabilities only
         run: npm audit --audit-level=high
-────────────────────────────────────────
+
+  # ──────────────────────────────────────────────
   # JOB 5: Notify on failure
   # ──────────────────────────────────────────────
   notify-failure:
